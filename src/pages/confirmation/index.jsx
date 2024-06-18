@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import Sample1 from "../../assets/sample_1.png";
 
 export default function ConfirmationPage() {
+  const navigate = useNavigate();
+
+  const handleBackToDashboard = () => {
+    navigate("/");
+  };
+
   return (
     <div className="p-16 bg-white mx-16 px-16 py-8 rounded-lg gap-12">
       <div className="flex gap-2 pb-10">
@@ -12,7 +19,7 @@ export default function ConfirmationPage() {
       <div className="grid grid-cols-[55%_45%] gap-4 pb-16">
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <img src={Sample1} />
+            <img src={Sample1} alt="Sample" />
           </div>
           <div>
             <div className="font-bold text-2xl pb-2">
@@ -28,7 +35,7 @@ export default function ConfirmationPage() {
               <div>Dentist Appointment w/ Dr John</div>
               <div className="font-normal">1h</div>
             </div>
-            <hr class="border-t border-black opacity-20 my-4 pb-4"/>
+            <hr className="border-t border-black opacity-20 my-4 pb-4" />
             <div className="flex justify-between">
               <div className="font-medium">Taxes</div>
               <div>EUR 0</div>
@@ -38,9 +45,11 @@ export default function ConfirmationPage() {
               <div>EUR 230</div>
             </div>
           </div>
-
           <div className="flex justify-end">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button
+              onClick={handleBackToDashboard}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
               Back To Dashboard
             </button>
           </div>
