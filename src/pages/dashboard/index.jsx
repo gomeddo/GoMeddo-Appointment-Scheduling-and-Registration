@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Sample1 from "../../assets/sample_1.png";
 import { Search, Calendar, ChevronDown, ArrowRight } from "react-feather";
 
@@ -38,7 +39,7 @@ function SearchBar() {
 
 function DatePicker() {
   return (
-    <div className="border-2 border-black rounded-lg p-4 flex gap-4 items-center">
+    <div className="border-2 border-black rounded-lg p-4 flex gap-4 items-center h-full">
       <Calendar />
       <div className="flex-1">Date</div>
       <ChevronDown />
@@ -48,14 +49,14 @@ function DatePicker() {
 
 function AppointmentCard() {
   return (
-    <div className="rounded-lg border border-blue-dark p-6 text-blue-dark grid grid-cols-2 gap-6">
+    <div className="rounded-lg border border-blue-dark p-6 text-blue-dark grid md:grid-cols-2 gap-6">
       <div>
         <div className="text-2xl font-medium">Bright Smiles New York</div>
         <div>Stoltenberg Island, West Kieth, DE 97885-0768</div>
         <div className="text-sm py-4">
           Excellent <span className="font-medium">9.2</span>
         </div>
-        <img src={Sample1} />
+        <img src={Sample1} className="w-full" />
       </div>
       <div className="flex flex-col gap-4">
         <div className="text-lg font-medium text-center">
@@ -66,7 +67,14 @@ function AppointmentCard() {
         <TimeSlotButton>10:20 - 11:20</TimeSlotButton>
         <TimeSlotButton>10:20 - 11:20</TimeSlotButton>
         <div className="font-medium text-center">show more...</div>
-        <ArrowRight className="ms-auto size-10" />
+        <Link
+          to="confirmation/10"
+          className="ms-auto hover:scale-105 transition-all"
+        >
+          <button>
+            <ArrowRight className="size-10" />
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -74,14 +82,11 @@ function AppointmentCard() {
 
 export default function DashboardPage() {
   return (
-    <div className="bg-white mx-16 px-16 py-8 rounded-lg flex flex-col gap-12">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2">
+    <div className="bg-white mx-8 md:mx-16 px-8 py-6 md:px-16 md:py-8 rounded-lg flex flex-col gap-6 xl:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 xl:gap-6">
+        <div className="lg:col-span-3 flex flex-col gap-3 xl:gap-6">
           <SearchBar />
-        </div>
-        <DatePicker />
-        <div className="col-span-2 flex flex-col gap-4">
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-cols-5 gap-3 xl:gap-6">
             <FilterButton>Recommended</FilterButton>
             <FilterButton>Distance</FilterButton>
             <FilterButton>Price</FilterButton>
@@ -89,8 +94,11 @@ export default function DashboardPage() {
             <FilterButton>Stars</FilterButton>
           </div>
         </div>
-        <div className="col-span-1 flex flex-col gap-4">
-          <div className="grid grid-cols-4 gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-3 xl:gap-6">
+          <div className="flex-1">
+            <DatePicker />
+          </div>
+          <div className="grid grid-cols-4 gap-3 xl:gap-6">
             <FilterButton>All</FilterButton>
             <FilterButton>Morning</FilterButton>
             <FilterButton>Afternoon</FilterButton>
@@ -98,7 +106,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+      <div className="flex flex-col gap-4 xl:gap-8 md:max-w-4xl md:mx-auto">
         {Array.from(Array(10).keys()).map((i) => (
           <AppointmentCard key={i} />
         ))}
