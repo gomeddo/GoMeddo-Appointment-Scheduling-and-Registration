@@ -2,7 +2,7 @@ import Logo from "../assets/logo.png";
 
 export default function Header() {
   return (
-    <header className="text-blue-dark px-12 py-8 font-medium sticky top-0 left-0 bg-blue-light flex flex-col gap-2 lg:gap-0 lg:flex-row">
+    <header className="text-blue-dark px-12 py-8 font-medium sticky top-0 left-0 bg-white flex flex-col gap-2 lg:gap-0 lg:flex-row pb-10">
       <div>
         <img src={Logo} alt="Dentist Logo" className="h-7"/>
       </div>
