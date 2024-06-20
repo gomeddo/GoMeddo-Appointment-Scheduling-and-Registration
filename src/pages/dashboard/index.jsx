@@ -6,7 +6,7 @@ function FilterButton(props) {
   return (
     <button
       {...props}
-      className="truncate font-medium border-2 border-blue-black rounded-md p-2 text-center hover:bg-blue-medium hover:text-white transition-all"
+      className="truncate text-lg font-medium border border-blue-black rounded-md p-2 w-full text-center hover:bg-blue-dark hover:text-white transition-all"
     />
   );
 }
@@ -26,16 +26,11 @@ function SearchBar() {
   return (
     <div className="border-2 border-black rounded-lg p-4 flex gap-4 items-center">
       <Search />
-      <div>
-        <input
-          placeholder="City, Country"
-          className="w-full border-none outline-none placeholder:text-blue-dark placeholder:font-medium"
-        />
-        <div className="font-medium text-xs">
-          From London / Any week / Add guests
-        </div>
+      <input
+        placeholder="Search..."
+        className="border-none outline-none placeholder:text-blue-dark placeholder:font-medium ml-4"
+      />
       </div>
-    </div>
   );
 }
 
