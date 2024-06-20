@@ -17,6 +17,8 @@ export default {
         green: {
           medium: "#2EC114",
         },
+        grey: {
+          light: "#939393",}
       },
     },
   },
