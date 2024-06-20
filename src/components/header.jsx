@@ -1,11 +1,20 @@
 import Logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 
-function NavItem(props) {
+function NavItem({ to, children, disabled }) {
   return (
-    <div className="cursor-default select-none hover:text-blue-dark hover:underline transition-all">
-      <Link to={props.to} className="ms-auto hover:scale-105 transition-all">
-        {props.children}
+    <div
+      className={`cursor-default select-none hover:text-blue-dark hover:underline transition-all ${
+        disabled ? "cursor-not-allowed" : ""
+      }`}
+    >
+      <Link
+        to={to}
+        className={`ms-auto hover:scale-105 transition-all ${
+          disabled ? "pointer-events-none" : ""
+        }`}
+      >
+        {children}
       </Link>
     </div>
   );
@@ -22,10 +31,18 @@ export default function Header() {
       </div>
 
       <nav className="lg:ms-auto flex flex-row gap-4 lg:gap-8 items-center font-semibold text-lg">
-        <NavItem to="/">Home</NavItem>
-        <NavItem to="/">Services</NavItem>
-        <NavItem to="/">About</NavItem>
-        <NavItem to="/">Contact</NavItem>
+        <NavItem to="/" disabled={false}>
+          Home
+        </NavItem>
+        <NavItem to="/" disabled={true}>
+          Services
+        </NavItem>
+        <NavItem to="/" disabled={true}>
+          About
+        </NavItem>
+        <NavItem to="/" disabled={true}>
+          Contact
+        </NavItem>
       </nav>
     </header>
   );
