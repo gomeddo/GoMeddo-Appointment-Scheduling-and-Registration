@@ -10,7 +10,7 @@ export default function ConfirmationPage() {
 
   return (
     <div className="p-16 bg-white mx-16 px-16 py-8 rounded-lg gap-12">
-      <div className="flex gap-2 pb-10">
+      <div className="flex gap-2 pb-10 text-center">
         <div className="relative grid select-none items-center whitespace-nowrap rounded-full bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
           <span className="">Confirmed</span>
         </div>

@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        "league-spartan": ['"League Spartan"', "sans-serif"],
+        'league-spartan': ['"League Spartan"', 'sans-serif'],
       },
       colors: {
         blue: {

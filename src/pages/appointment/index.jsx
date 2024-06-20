@@ -1,4 +1,4 @@
-import SampleImage from "../../assets/sample_1.png";
+import SampleImage from "../../assets/booking.png";
 
 export default function AppointmentPage() {
   return (

@@ -13,10 +13,12 @@ function FilterButton(props) {
 
 function TimeSlotButton(props) {
   return (
-    <button
-      {...props}
-      className="truncate text-lg font-medium border border-blue-black rounded-md p-2 text-center hover:bg-blue-dark hover:text-white transition-all"
-    />
+    <Link to="/appointment/23" className="">
+      <button
+        {...props}
+        className="truncate text-lg font-medium border border-blue-black rounded-md p-2 w-full text-center hover:bg-blue-dark hover:text-white transition-all"
+      />
+    </Link>
   );
 }
 

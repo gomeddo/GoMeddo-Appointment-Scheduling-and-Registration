@@ -22,7 +22,7 @@ function NavItem({ to, children, disabled }) {
 
 export default function Header() {
   return (
-    <header className="text-blue-dark px-12 py-8 font-medium sticky top-0 left-0 flex flex-col gap-2 lg:gap-0 lg:flex-row">
+    <header className="text-blue-dark px-12 py-8 font-medium sticky top-0 left-0 flex flex-col gap-2 lg:gap-0 lg:flex-row bg-white">
       <div className="flex flex-row items-center">
         <h1 className="uppercase text-3xl font-bold">
           Bright Smiles Dental Clinic
