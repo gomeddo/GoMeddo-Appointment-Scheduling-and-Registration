@@ -51,7 +51,6 @@ export default function AppointmentPage() {
     <div className="w-full min-h-screen pt-12">
       <div className="md:max-w-screen-lg mx-auto">
         <h2 className="text-3xl font-semibold">Make an appointment</h2>
-
         <hr className="my-8 bg-blue-900 h-0.5"></hr>
 
         <div className="flex flex-row">
@@ -112,7 +111,7 @@ export default function AppointmentPage() {
                 className={`px-16 py-2 outline rounded-sm ${
                   formValid
                     ? "bg-blue-dark hover:bg-blue-hover text-white font-semibold"
-                    : "cursor-not-allowed"
+                    : "bg-grey-light cursor-not-allowed text-white font-semibold"
                 }`}
                 onClick={handleSubmit}
                 disabled={!formValid}
