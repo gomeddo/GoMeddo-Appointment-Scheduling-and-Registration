@@ -11,6 +11,7 @@ export default {
           light: "#F5FCFF",
           medium: "#1376F8",
           dark: "#011632",
+          hover: "#1B375C",
           black: "#000118",
         },
         green: {
