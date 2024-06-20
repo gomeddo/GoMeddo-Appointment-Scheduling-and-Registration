@@ -28,12 +28,9 @@ function SearchBar() {
       <Search />
       <div>
         <input
-          placeholder="City, Country"
+          placeholder="Search..."
           className="w-full border-none outline-none placeholder:text-blue-dark placeholder:font-medium"
         />
-        <div className="font-medium text-xs">
-          From London / Any week / Add guests
-        </div>
       </div>
     </div>
   );
