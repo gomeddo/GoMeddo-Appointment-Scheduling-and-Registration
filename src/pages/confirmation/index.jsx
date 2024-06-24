@@ -9,7 +9,7 @@ export default function ConfirmationPage() {
   };
 
   return (
-    <div className="p-16 bg-white mx-16 px-16 py-8 rounded-lg gap-12">
+    <div>
       <div className="flex gap-2 pb-10 text-center">
         <div className="relative grid select-none items-center whitespace-nowrap rounded-full bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
           <span className="">Confirmed</span>
@@ -25,7 +25,7 @@ export default function ConfirmationPage() {
             <div className="font-bold text-2xl pb-2">
               Bright Smiles Amsterdam
             </div>
-            <div className="font-medium pb-4">Amsterdam suid, 256781u892</div>
+            <div className="font-medium pb-4">Amsterdam zuid, Insulindesingel 116</div>
             <div className="font-medium">Good 7.2</div>
           </div>
         </div>
