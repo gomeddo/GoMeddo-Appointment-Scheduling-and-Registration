@@ -1,5 +1,5 @@
 import { forwardRef, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
 
@@ -59,9 +59,9 @@ export default function AppointmentPage() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <h2 className="text-3xl font-semibold">Make an appointment</h2>
-      <hr className="my-8 bg-blue-900 h-0.5" />
+      <hr className="bg-gray-300 h-0.5" />
       <div className="flex flex-row gap-16">
         <div className="relative">
           <div className="bg-black rounded-3xl w-[14rem] h-[22rem] me-8 mb-8" />
