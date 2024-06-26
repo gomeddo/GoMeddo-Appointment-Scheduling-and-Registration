@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-function Button({ active, disabled, ...rest }) {
+function Button({ active, disabled, className, ...rest }) {
   return (
     <button
       {...rest}
@@ -13,7 +13,8 @@ function Button({ active, disabled, ...rest }) {
         {
           "bg-blue-black text-white": active,
           "bg-gray-400 text-white": disabled,
-        }
+        },
+        className
       )}
     />
   );

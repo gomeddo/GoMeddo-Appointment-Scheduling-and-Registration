@@ -1,9 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import Layout from "./pages/layout";
-import DashboardPage from "./pages/dashboard";
 import AppointmentPage from "./pages/appointment";
 import ConfirmationPage from "./pages/confirmation";
+import DashboardPage from "./pages/dashboard";
+import Layout from "./pages/layout";
 
 function App() {
   return (

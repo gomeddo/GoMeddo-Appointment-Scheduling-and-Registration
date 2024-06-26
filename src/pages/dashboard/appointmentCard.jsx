@@ -4,7 +4,7 @@ import { ArrowRight } from "react-feather";
 import Button from "../../components/button";
 import { useState } from "react";
 
-const appointments = Array.from(Array(4).keys()).map((i) => {
+const timeSlots = Array.from(Array(4).keys()).map((i) => {
   const start = new Date();
   start.setHours(9 + i * 2, 0, 0, 0);
   const end = new Date(start);
@@ -17,38 +17,38 @@ const appointments = Array.from(Array(4).keys()).map((i) => {
   };
 });
 
-export function AppointmentCard() {
-  const [selectedAppointment, setSelectedAppointment] = useState();
+export function AppointmentCard({ id, city, address, ratingType, rating }) {
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
       <img src={Sample1} className="w-full" />
       <div className="flex flex-col gap-4">
         <div>
-          <div className="text-2xl font-medium">Bright Smiles Amsterdam</div>
-          <div>Amsterdam zuid, Insulindesingel 116</div>
+          <div className="text-2xl font-medium">{city}</div>
+          <div>{address}</div>
           <div className="text-sm py-4">
-            Excellent <span className="font-medium">9.2</span>
+            {ratingType} <span className="font-medium">{rating}</span>
           </div>
         </div>
-        {appointments.map((appointment) => (
+        {timeSlots.map((timeSlot) => (
           <Button
-            key={appointment.id}
-            active={appointment.id === selectedAppointment}
+            key={timeSlot.id}
+            active={timeSlot.id === selectedTimeSlot}
             onClick={() =>
-              setSelectedAppointment((state) =>
-                state !== appointment.id ? appointment.id : undefined
+              setSelectedTimeSlot((state) =>
+                state !== timeSlot.id ? timeSlot.id : undefined
               )
             }
           >
-            {appointment.start.toLocaleTimeString([], { hour: "numeric" })} -{" "}
-            {appointment.end.toLocaleTimeString([], { hour: "numeric" })}
+            {timeSlot.start.toLocaleTimeString([], { hour: "numeric" })} -{" "}
+            {timeSlot.end.toLocaleTimeString([], { hour: "numeric" })}
           </Button>
         ))}
         <div className="font-bold text-center">show more...</div>
-        {selectedAppointment != null && (
+        {selectedTimeSlot != null && (
           <Link
-            to={`/appointment/${selectedAppointment}`}
+            to={`/appointment/${id}?timeSlot=${selectedTimeSlot}`}
             className="ms-auto hover:scale-105 transition-all"
           >
             <ArrowRight className="size-10" />
