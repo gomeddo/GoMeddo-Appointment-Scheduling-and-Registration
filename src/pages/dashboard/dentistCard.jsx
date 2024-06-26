@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Sample1 from "../../assets/sample_1.png";
 import { ArrowRight } from "react-feather";
 import Button from "../../components/button";
 import { useState } from "react";
@@ -17,15 +16,24 @@ const timeSlots = Array.from(Array(4).keys()).map((i) => {
   };
 });
 
-export function AppointmentCard({ id, city, address, ratingType, rating }) {
+export default function DentistCard({
+  id,
+  name,
+  city,
+  address,
+  ratingType,
+  rating,
+  imageUrl,
+  rooms,
+}) {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
-      <img src={Sample1} className="w-full" />
+      <img src={imageUrl} className="w-full rounded-lg" />
       <div className="flex flex-col gap-4">
         <div>
-          <div className="text-2xl font-medium">{city}</div>
+          <div className="text-2xl font-medium">{name}</div>
           <div>{address}</div>
           <div className="text-sm py-4">
             {ratingType} <span className="font-medium">{rating}</span>
@@ -48,7 +56,7 @@ export function AppointmentCard({ id, city, address, ratingType, rating }) {
         <div className="font-bold text-center">show more...</div>
         {selectedTimeSlot != null && (
           <Link
-            to={`/appointment/${id}?timeSlot=${selectedTimeSlot}`}
+            to={`/dentist/${id}?timeSlot=${selectedTimeSlot}`}
             className="ms-auto hover:scale-105 transition-all"
           >
             <ArrowRight className="size-10" />

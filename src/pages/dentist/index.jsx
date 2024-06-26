@@ -1,7 +1,8 @@
 import { forwardRef, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
+import { useDentist } from "../../sdk/hooks";
 
 const FormControl = forwardRef(
   ({ id, label, type, required, onChange }, ref) => {
@@ -25,8 +26,11 @@ const FormControl = forwardRef(
   }
 );
 
-export default function AppointmentPage() {
+export default function DentistPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { isLoading, dentist } = useDentist(id);
+
   const [formValid, setFormValid] = useState(false);
 
   const handleCancel = () => {
