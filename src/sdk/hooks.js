@@ -58,30 +58,30 @@ export function useDentists() {
           // )
           .withDuration(30)
           .getResults();
-
         const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
           timeSlot.getReservations().map((reservation) => ({
             roomId: reservation.getCustomProperty("B25__Resource__c"),
             start: new Date(timeSlot.startOfSlot).toLocaleString("en-US", {
               timeZone: "America/New_York",
+              hour: "2-digit",
               minute: "2-digit",
+              second: "2-digit",
             }),
             end: new Date(timeSlot.endOfSlot).toLocaleString("en-US", {
               timeZone: "America/New_York",
               hour: "2-digit",
               minute: "2-digit",
+              second: "2-digit",
             }),
           }))
         );
 
-        console.log("Fetched Time Slots per Room:");
-        roomTimes.forEach((roomTime) => {
-          const room = roomResources.find(
-            (room) => room.id === roomTime.roomId
+        roomResources.forEach((room) => {
+          const roomTimeSlots = roomTimes.filter(
+            (roomTime) => roomTime.roomId === room.id
           );
-          if (room) {
-            console.log(timeSlots.getTimeSlots());
-          }
+          console.log(`Room: ${room.name}`);
+          console.log(roomTimeSlots); // Log all time slots for this room
         });
 
         const dentistsData = dentistResources.map((dentist) => {
