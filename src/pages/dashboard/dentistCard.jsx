@@ -3,6 +3,14 @@ import { ArrowRight } from "react-feather";
 import Button from "../../components/button";
 import { useState } from "react";
 
+function formatDate(date) {
+  return new Date(date).toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 const timeSlots = Array.from(Array(4).keys()).map((i) => {
   const start = new Date();
   start.setHours(9 + i * 2, 0, 0, 0);
@@ -27,6 +35,33 @@ export default function DentistCard({
   rooms,
 }) {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
+  const [showMore, setShowMore] = useState(false);
+
+  const timeSlots = rooms
+    .flatMap((room) => room.timeSlots)
+    .reduce((unique, timeSlot) => {
+      const roomId = timeSlot.roomId;
+      const start = new Date(timeSlot.start);
+      const end = new Date(timeSlot.end);
+
+      const existing = unique.find(
+        (timeSlot) =>
+          timeSlot.start.getTime() === start.getTime() &&
+          timeSlot.end.getTime() === end.getTime()
+      );
+
+      if (!!existing) {
+        existing.roomIds.push(roomId);
+      } else {
+        unique.push({
+          start: start,
+          end: end,
+          roomIds: [roomId],
+        });
+      }
+
+      return unique;
+    }, []);
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
@@ -39,24 +74,32 @@ export default function DentistCard({
             {ratingType} <span className="font-medium">{rating}</span>
           </div>
         </div>
-        {timeSlots.map((timeSlot) => (
+        {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
           <Button
-            key={timeSlot.id}
-            active={timeSlot.id === selectedTimeSlot}
+            key={i}
+            active={i === selectedTimeSlot}
             onClick={() =>
-              setSelectedTimeSlot((state) =>
-                state !== timeSlot.id ? timeSlot.id : undefined
-              )
+              setSelectedTimeSlot((state) => (state !== i ? i : undefined))
             }
           >
-            {timeSlot.start.toLocaleTimeString([], { hour: "numeric" })} -{" "}
-            {timeSlot.end.toLocaleTimeString([], { hour: "numeric" })}
+            {formatDate(timeSlot.start)} - {formatDate(timeSlot.end)}
           </Button>
         ))}
-        <div className="font-bold text-center">show more...</div>
+        {timeSlots.length > 3 && (
+          <Button
+            className="!font-bold !ring-0"
+            onClick={() => setShowMore((state) => !state)}
+          >
+            {showMore ? "show less..." : "show more..."}
+          </Button>
+        )}
         {selectedTimeSlot != null && (
           <Link
-            to={`/dentist/${id}?timeSlot=${selectedTimeSlot}`}
+            to={`/dentist/${id}?start=${timeSlots[
+              selectedTimeSlot
+            ].start.getTime()}&end=${timeSlots[
+              selectedTimeSlot
+            ].end.getTime()}&roomIds=${timeSlots[selectedTimeSlot].roomIds}`}
             className="ms-auto hover:scale-105 transition-all"
           >
             <ArrowRight className="size-10" />

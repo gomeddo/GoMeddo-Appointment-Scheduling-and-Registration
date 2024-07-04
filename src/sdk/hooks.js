@@ -61,7 +61,9 @@ export function useDentists() {
         const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
           timeSlot.getReservations().map((reservation) => ({
             roomId: reservation.getCustomProperty("B25__Resource__c"),
-            start: new Date(timeSlot.startOfSlot).toLocaleString("en-US", {
+            start: timeSlot.startOfSlot,
+            end: timeSlot.endOfSlot,
+            /*start: new Date(timeSlot.startOfSlot).toLocaleString("en-US", {
               timeZone: "America/New_York",
               hour: "2-digit",
               minute: "2-digit",
@@ -72,7 +74,7 @@ export function useDentists() {
               hour: "2-digit",
               minute: "2-digit",
               second: "2-digit",
-            }),
+            }),*/
           }))
         );
 
