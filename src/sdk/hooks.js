@@ -12,6 +12,7 @@ export function useDentists() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [dentists, setDentists] = useState([]);
+  const [staffIds, setStaffIds] = useState([]);
 
   useEffect(() => {
     const trigger = async () => {
@@ -42,13 +43,27 @@ export function useDentists() {
           resources.filter((resource) => resource.parentId === dentist.id)
         );
 
-        // console.log(resources);
+        let staffResults = [];
 
-        const staffResults = await gomeddo
-          .buildDimensionRecordRequest("B25__Staff__c")
-          .getResults();
+        try {
+          const staffResponse = await gomeddo
+            .buildDimensionRecordRequest("B25__Staff__c")
+            .getResults();
 
-        console.log("Staff Results:", staffResults);
+          // Extracting staff data from DimensionRecordResult
+          staffResults = Array.from(staffResponse.objectById.values()).map((staff) => ({
+            id: staff.id,
+            name: staff.name, // adjust accordingly to match the structure of staff object
+          }));
+
+          console.log("Staff Results:", staffResults);
+
+          const ids = staffResults.map((staff) => staff.id);
+          setStaffIds(ids);
+          console.log(ids);
+        } catch (error) {
+          console.error("Error fetching staff:", error);
+        }
 
         const start = new Date();
         start.setHours(6, 0, 0, 0);
@@ -118,7 +133,7 @@ export function useDentists() {
     trigger();
   }, [gomeddo]);
 
-  return { isLoading, dentists };
+  return { isLoading, dentists, staffIds };
 }
 
 export function useDentist(id) {
