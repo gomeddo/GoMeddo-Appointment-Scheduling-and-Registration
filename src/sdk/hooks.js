@@ -42,6 +42,8 @@ export function useDentists() {
           resources.filter((resource) => resource.parentId === dentist.id)
         );
 
+        console.log(resources);
+
         const start = new Date();
         start.setHours(6, 0, 0, 0);
 
@@ -77,14 +79,6 @@ export function useDentists() {
             }),*/
           }))
         );
-
-        roomResources.forEach((room) => {
-          const roomTimeSlots = roomTimes.filter(
-            (roomTime) => roomTime.roomId === room.id
-          );
-          console.log(`Room: ${room.name}`);
-          console.log(roomTimeSlots); // Log all time slots for this room
-        });
 
         const dentistsData = dentistResources.map((dentist) => {
           const rooms = roomResources
@@ -174,4 +168,50 @@ export function useDentist(id) {
   }, [id, gomeddo]);
 
   return { isLoading, dentist };
+}
+
+export function useReservation(id) {
+  const gomeddo = useGomeddo();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [reservation, setReservation] = useState(undefined);
+
+  useEffect(() => {
+    const trigger = async () => {
+      setIsLoading(true);
+
+      try {
+        const reservation = (
+          await gomeddo
+            .buildReservationRequest()
+            .withIds(id)
+            .includeAdditionalFields([
+              "B25__Total_Price__c",
+              "B25__Resource__c",
+              "B25__Start_Date__c",
+              "B25__End_Date__c",
+              "Duration_in_Hours__c",
+              "B25__Base_Price__c",
+              "B25__Reservation_Type__c",
+            ])
+            .getResults()
+        ).getReservation(id);
+
+        setReservation({
+          id: reservation.id,
+          start: reservation.getCustomProperty("B25__Start_Date__c"),
+          end: reservation.getCustomProperty("B25__End_Date__c"),
+          duration: reservation.getCustomProperty("Duration_in_Hours__c"),
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    trigger();
+  }, [id, gomeddo]);
+
+  return { isLoading, reservation };
 }

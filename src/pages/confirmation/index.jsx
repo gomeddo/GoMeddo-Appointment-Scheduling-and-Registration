@@ -1,9 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import { CheckCircle } from "react-feather";
+import { useReservation } from "../../sdk/hooks";
 
 export default function ConfirmationPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
+
+  const { isLoading, reservation } = useReservation(id);
 
   const handleBackToDashboard = () => {
     navigate("/");
