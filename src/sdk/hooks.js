@@ -72,13 +72,14 @@ export function useDentists() {
         end.setHours(24, 0, 0, 0);
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end)
+          .withField("B25__Staff__c", staffIds)
           .withField(
             "B25__Resource__c",
             roomResources.map((resource) => resource.id)
           )
-          .withField("B25__Staff__c", staffIds)
           .withDuration(30)
           .getResults();
+        console.log("Time Slots:", timeSlots);
         const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
           timeSlot.getReservations().map((reservation) => ({
             roomId: reservation.getCustomProperty("B25__Resource__c"),
