@@ -76,6 +76,7 @@ export function useDentists() {
             "B25__Resource__c",
             roomResources.map((resource) => resource.id)
           )
+          .withField("B25__Staff__c", staffIds)
           .withDuration(30)
           .getResults();
         const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
