@@ -42,7 +42,13 @@ export function useDentists() {
           resources.filter((resource) => resource.parentId === dentist.id)
         );
 
-        console.log(resources);
+        // console.log(resources);
+
+        const staffResults = await gomeddo
+          .buildDimensionRecordRequest("B25__Staff__c")
+          .getResults();
+
+        console.log("Staff Results:", staffResults);
 
         const start = new Date();
         start.setHours(6, 0, 0, 0);
@@ -55,9 +61,6 @@ export function useDentists() {
             "B25__Resource__c",
             roomResources.map((resource) => resource.id)
           )
-          // .withField(
-          //   "B25__Staff__c", "a0ebn000001r5fKAAQ"
-          // )
           .withDuration(30)
           .getResults();
         const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
