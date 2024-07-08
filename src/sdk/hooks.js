@@ -72,7 +72,6 @@ export function useDentists() {
         end.setHours(24, 0, 0, 0);
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end)
-          .withField("B25__Staff__c", staffIds)
           .withField(
             "B25__Resource__c",
             roomResources.map((resource) => resource.id)
@@ -85,6 +84,7 @@ export function useDentists() {
             roomId: reservation.getCustomProperty("B25__Resource__c"),
             start: timeSlot.startOfSlot,
             end: timeSlot.endOfSlot,
+            staff: reservation.setCustomProperty("B25__Staff__c", staffIds),
             /*start: new Date(timeSlot.startOfSlot).toLocaleString("en-US", {
               timeZone: "America/New_York",
               hour: "2-digit",
