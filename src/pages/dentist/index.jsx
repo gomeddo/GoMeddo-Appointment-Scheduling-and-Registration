@@ -59,16 +59,16 @@ export default function DentistPage() {
       );
       contact.setCustomProperty("Phone", phoneRef.current.value);
 
-      const reservation = new Reservation()
-        .setResource({ id: roomIds[0] })
-        .setContact(contact)
-        .setStartDatetime(start)
-        .setEndDatetime(end);
+      // const reservation = new Reservation()
+      //   .setResource({ id: roomIds[0] })
+      //   .setContact(contact)
+      //   .setStartDatetime(start)
+      //   .setEndDatetime(end);
 
-      reservation.setCustomProperty(
-        "B25__Reservation_Type__c",
-        "a0Ubn0000017cw1EAA"
-      );
+      // reservation.setCustomProperty(
+      //   "B25__Reservation_Type__c",
+      //   "a0Ubn0000017cw1EAA"
+      // );
 
       const response = await gomeddo.saveReservation(reservation);
       console.log(response);
