@@ -32,9 +32,6 @@ export default function DentistPage() {
   const { selectedReservation } = useStateContext();
 
   const [formValid, setFormValid] = useState(false);
-  const handleCancel = () => {
-    navigate("/");
-  };
 
   const firstNameRef = useRef();
   const lastNameRef = useRef();
@@ -153,7 +150,9 @@ export default function DentistPage() {
             />
             <p>You agree with our friendly privacy policy</p>
           </div>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Link to="/">
+            <Button>Cancel</Button>
+          </Link>
           <Button
             disabled={!formValid}
             active={formValid}
