@@ -6,8 +6,6 @@ export default function ConfirmationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { isLoading, reservation } = useReservation(id);
-
   const handleBackToDashboard = () => {
     navigate("/");
   };
