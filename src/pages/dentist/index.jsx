@@ -1,9 +1,10 @@
-import { forwardRef, useRef, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { forwardRef, useCallback, useRef, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
-import { useDentist, useGomeddo } from "../../sdk/hooks";
-import { Contact, Reservation, Resource } from "@gomeddo/sdk";
+import { useStateContext } from "../../sdk/stateContext";
+import { useGomeddo } from "../../sdk/hooks";
+import { Contact, Reservation } from "@gomeddo/sdk";
 
 const FormControl = forwardRef(
   ({ id, label, type, required, onChange }, ref) => {
@@ -28,17 +29,9 @@ const FormControl = forwardRef(
 );
 
 export default function DentistPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { id } = useParams();
+  const { selectedReservation } = useStateContext();
 
-  const start = new Date(Number(searchParams.get("start")));
-  const end = new Date(Number(searchParams.get("end")));
-  const roomIds = searchParams.get("roomIds")?.split(",") ?? [];
-
-  const { isLoading, dentist } = useDentist(id);
   const [formValid, setFormValid] = useState(false);
-
   const handleCancel = () => {
     navigate("/");
   };
@@ -48,35 +41,6 @@ export default function DentistPage() {
   const phoneRef = useRef();
   const emailRef = useRef();
   const agreementRef = useRef();
-
-  const gomeddo = useGomeddo();
-  const handleSubmit = async () => {
-    try {
-      const contact = new Contact(
-        firstNameRef.current.value,
-        lastNameRef.current.value,
-        emailRef.current.value
-      );
-      contact.setCustomProperty("Phone", phoneRef.current.value);
-
-      // const reservation = new Reservation()
-      //   .setResource({ id: roomIds[0] })
-      //   .setContact(contact)
-      //   .setStartDatetime(start)
-      //   .setEndDatetime(end);
-
-      // reservation.setCustomProperty(
-      //   "B25__Reservation_Type__c",
-      //   "a0Ubn0000017cw1EAA"
-      // );
-
-      const response = await gomeddo.saveReservation(reservation);
-      console.log(response);
-      navigate(`/confirmation/${response.id}`);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleFormChange = () => {
     // Basic validation: Check if all required fields are filled
@@ -92,6 +56,36 @@ export default function DentistPage() {
       setFormValid(false);
     }
   };
+
+  const gomeddo = useGomeddo();
+  const handleSubmit = async () => {
+    try {
+      const contact = new Contact(
+        firstNameRef.current.value,
+        lastNameRef.current.value,
+        emailRef.current.value
+      );
+      contact.setCustomProperty("Phone", phoneRef.current.value);
+
+      selectedReservation.setCustomProperty(
+        "B25__Reservation_Type__c",
+        "a0Ubn0000017cw1EAA"
+      );
+      selectedReservation.setResource({
+        id: selectedReservation.getCustomProperty("B25__Resource__c"),
+      });
+      selectedReservation.setContact(contact);
+
+      const response = await gomeddo.saveReservation(selectedReservation);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (!selectedReservation) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="flex flex-col gap-8">
