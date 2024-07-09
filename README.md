@@ -37,15 +37,19 @@ The application interface allows users to specify their preferences for a dentis
 
    - Define reservation types that correspond to different appointment types (e.g., "checkup").
 
-5. **Create Custom Fields Under the Resource Object**:
+5. **Create Custom Fields Under the Objects**:
 
-   - Add the following custom fields to provide detailed information about each dental clinic:
+   - Add the following custom fields to the resource object *"Building"* to provide detailed information about each dental clinic:
 
      - `Dentist_City__c` (Formula Text Field)
      - `Dentist_Location__c` (Long Text Area Field)
      - `Dentist_Rating__c` (Number Field)
      - `B25__Image_Url__c` (URL Field)
      - `B25__Default_Price__c` (Currency Field)
+
+   - Add the following custom fields to the contact object provide a message for each dentist:
+
+     - `Dentist_Message__c` (Long Text Area Field)
 
 Note:
 - Ensure that each resource in GoMeddo is marked as '**_isActive_**' and '**_Api Visible_**' to be displayed and available through the API.
