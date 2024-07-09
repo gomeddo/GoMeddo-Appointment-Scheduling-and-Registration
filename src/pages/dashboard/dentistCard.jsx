@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "react-feather";
-import Button from "../../components/button";
 import { useState } from "react";
+import { ArrowRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/button";
+import Skeleton from "../../components/skeleton";
+import { useStateContext } from "../../sdk/stateContext";
 
+// Function to format date into a readable string
 function formatDate(date) {
   return new Date(date).toLocaleString("en-US", {
     timeZone: "America/New_York",
@@ -11,78 +14,80 @@ function formatDate(date) {
   });
 }
 
-const timeSlots = Array.from(Array(4).keys()).map((i) => {
-  const start = new Date();
-  start.setHours(9 + i * 2, 0, 0, 0);
-  const end = new Date(start);
-  end.setHours(11 + i * 2, 0, 0, 0);
-
-  return {
-    id: i,
-    start: start,
-    end: end,
-  };
-});
-
+// Component to display a dentist card with reservation information
 export default function DentistCard({
-  id,
-  name,
-  city,
-  address,
-  ratingType,
-  rating,
-  imageUrl,
-  rooms,
+  dentistResource,
+  roomResources,
+  reservationResources,
+  reservationsLoading,
 }) {
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-  const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
-  const timeSlots = rooms
-    .flatMap((room) => room.timeSlots)
-    .reduce((unique, timeSlot) => {
-      const roomId = timeSlot.roomId;
-      const start = new Date(timeSlot.start);
-      const end = new Date(timeSlot.end);
+  // Extract dentist details from the provided resource
+  const id = dentistResource.id;
+  const name = dentistResource.name;
+  const city = dentistResource.getCustomProperty("Dentist_City__c");
+  const address = dentistResource.getCustomProperty("Dentist_Location__c");
+  const rating = dentistResource.getCustomProperty("Dentist_Rating__c");
+  const price = dentistResource.getCustomProperty("B25__Default_Price__c");
+  const imageUrl = dentistResource.getCustomProperty("B25__Image_Url__c");
+  const ratingType = "Excellent";
 
-      const existing = unique.find(
-        (timeSlot) =>
-          timeSlot.start.getTime() === start.getTime() &&
-          timeSlot.end.getTime() === end.getTime()
-      );
+  // Group reservations by unique time slots
+  const timeSlots = reservationResources.reduce((unique, timeSlot) => {
+    const start = timeSlot.startDatetime;
+    const end = timeSlot.endDatetime;
 
-      if (!!existing) {
-        existing.roomIds.push(roomId);
-      } else {
-        unique.push({
-          start: start,
-          end: end,
-          roomIds: [roomId],
-        });
-      }
+    const existing = unique.find(
+      (timeSlot) =>
+        timeSlot.start.getTime() === start.getTime() &&
+        timeSlot.end.getTime() === end.getTime()
+    );
 
-      return unique;
-    }, []);
+    if (!!existing) {
+      existing.reservations.push(timeSlot);
+    } else {
+      unique.push({
+        start: start,
+        end: end,
+        reservations: [timeSlot],
+      });
+    }
+
+    return unique;
+  }, []);
+
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(); // State to track selected time slot
+  const [showMore, setShowMore] = useState(false); // State to toggle showing more/less time slots
+
+  const { setSelectedReservation } = useStateContext(); // Access context to set selected reservation
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
-      <img src={imageUrl} className="w-full rounded-lg" />
+      <img src={imageUrl} className="w-full rounded-lg" />{" "}
+      {/* Display dentist image */}
       <div className="flex flex-col gap-4">
         <div>
-          <div className="text-2xl font-medium">{name}</div>
-          <div>{address}</div>
+          <div className="text-2xl font-medium">{name}</div>{" "}
+          {/* Display dentist name */}
+          <div>{address}</div> {/* Display dentist address */}
           <div className="text-sm py-4">
-            {ratingType} <span className="font-medium">{rating}</span>
+            {ratingType} <span className="font-medium">{rating}</span>{" "}
+            {/* Display dentist rating */}
           </div>
         </div>
+        {reservationsLoading &&
+          Array.from(Array(3).keys()).map((i) => (
+            <Skeleton key={i} className="h-10" /> // Display loading skeletons while reservations are loading
+          ))}
         {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
           <Button
             key={i}
-            active={i === selectedTimeSlot}
-            onClick={() =>
-              setSelectedTimeSlot((state) => (state !== i ? i : undefined))
-            }
+            active={selectedTimeSlot === i}
+            onClick={() => setSelectedTimeSlot(i)}
           >
-            {formatDate(timeSlot.start)} - {formatDate(timeSlot.end)}
+            {formatDate(timeSlot.start)} - {formatDate(timeSlot.end)}{" "}
+            {/* Display time slots */}
           </Button>
         ))}
         {timeSlots.length > 3 && (
@@ -90,20 +95,20 @@ export default function DentistCard({
             className="!font-bold !ring-0"
             onClick={() => setShowMore((state) => !state)}
           >
-            {showMore ? "show less..." : "show more..."}
+            {showMore ? "show less..." : "show more..."}{" "}
+            {/* Toggle show more/less time slots */}
           </Button>
         )}
         {selectedTimeSlot != null && (
-          <Link
-            to={`/dentist/${id}?start=${timeSlots[
-              selectedTimeSlot
-            ].start.getTime()}&end=${timeSlots[
-              selectedTimeSlot
-            ].end.getTime()}&roomIds=${timeSlots[selectedTimeSlot].roomIds}`}
-            className="ms-auto hover:scale-105 transition-all"
-          >
-            <ArrowRight className="size-10" />
-          </Link>
+          <ArrowRight
+            className="ms-auto hover:scale-105 transition-all size-10 cursor-pointer"
+            onClick={() => {
+              setSelectedReservation(
+                timeSlots[selectedTimeSlot].reservations[0]
+              ); // Set selected reservation in context
+              navigate("/dentist"); // Navigate to dentist details page
+            }}
+          />
         )}
       </div>
     </div>

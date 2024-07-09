@@ -1,28 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import GoMeddo from "@gomeddo/sdk";
 
+// Custom hook to initialize and memoize the GoMeddo instance
 export function useGomeddo() {
   return useMemo(() => {
-    return new GoMeddo(import.meta.env.VITE_GOMEDDO_KEY);
+    return new GoMeddo(import.meta.env.VITE_GOMEDDO_KEY); // Initialize GoMeddo with the provided API key
   }, []);
 }
 
-export function useDentists() {
-  const gomeddo = useGomeddo();
+// Custom hook to fetch dentist resources and their associated rooms
+export function useDentistResources() {
+  const gomeddo = useGomeddo(); // Get the GoMeddo instance
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [dentists, setDentists] = useState([]);
-  const [staffIds, setStaffIds] = useState([]);
-  const [reservations, setReservations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // State for loading status
+  const [dentists, setDentists] = useState([]); // State to hold dentist resources
+  const [rooms, setRooms] = useState([]); // State to hold room resources
 
   useEffect(() => {
+    // Function to fetch dentist and room resources
     const trigger = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // Set loading state to true
 
       try {
         const results = await gomeddo
           .buildResourceRequest()
-          .includeAllResourcesAt("a0Zbn000000gzqHEAQ")
+          .includeAllResourcesAt("a0Zbn000000gzqHEAQ") // Include resources at a specific location
           .includeAdditionalField([
             "Dentist_City__c",
             "Dentist_Location__c",
@@ -32,186 +34,116 @@ export function useDentists() {
           ])
           .getResults();
 
-        const resourceIds = results.getResourceIds();
-        const resources = resourceIds.map((id) => results.getResource(id));
+        const resourceIds = results.getResourceIds(); // Get all resource IDs
+        const resources = resourceIds.map((id) => results.getResource(id)); // Get resources by ID
         const cityResources = resources.filter(
           (resource) => resource.parentId === "a0Zbn000000gzqHEAQ"
-        );
+        ); // Filter city resources
         const dentistResources = cityResources.flatMap((city) =>
           resources.filter((resource) => resource.parentId === city.id)
-        );
+        ); // Get dentist resources within city resources
         const roomResources = dentistResources.flatMap((dentist) =>
           resources.filter((resource) => resource.parentId === dentist.id)
-        );
+        ); // Get room resources within dentist resources
 
-        let staffResults = [];
+        setDentists(dentistResources); // Set dentist resources state
+        setRooms(roomResources); // Set room resources state
+      } catch (error) {
+        console.error("Error fetching dentists:", error); // Log error if any
+      } finally {
+        setIsLoading(false); // Set loading state to false
+      }
+    };
 
-        try {
-          const staffResponse = await gomeddo
-            .buildDimensionRecordRequest("B25__Staff__c")
-            .getResults();
+    trigger(); // Trigger the fetching function
+  }, [gomeddo]);
 
-          staffResults = Array.from(staffResponse.objectById.values()).map(
-            (staff) => ({
-              id: staff.id,
-              name: staff.name,
-            })
-          );
+  return {
+    isLoading,
+    dentists,
+    rooms,
+  };
+}
 
-          const ids = staffResults.map((staff) => staff.id);
-          setStaffIds(ids);
-        } catch (error) {
-          console.error("Error fetching staff:", error);
-        }
-        console.log(staffIds);
+// Custom hook to fetch staff resources
+export function useStaffResources() {
+  const gomeddo = useGomeddo(); // Get the GoMeddo instance
+
+  const [isLoading, setIsLoading] = useState(true); // State for loading status
+  const [staff, setStaff] = useState([]); // State to hold staff resources
+
+  useEffect(() => {
+    // Function to fetch staff resources
+    const trigger = async () => {
+      try {
+        const results = await gomeddo
+          .buildDimensionRecordRequest("B25__Staff__c") // Request staff records
+          .getResults();
+
+        const objectIds = results.getObjectIds(); // Get all object IDs
+        const records = objectIds.map((id) => results.getDimensionRecord(id)); // Get records by ID
+
+        setStaff(records); // Set staff resources state
+      } catch (error) {
+        console.error(error); // Log error if any
+      } finally {
+        setIsLoading(false); // Set loading state to false
+      }
+    };
+
+    trigger(); // Trigger the fetching function
+  }, [gomeddo]);
+
+  return {
+    isLoading,
+    staff,
+  };
+}
+
+// Custom hook to fetch room reservation resources
+export function useRoomReservationResources(roomIds) {
+  const gomeddo = useGomeddo(); // Get the GoMeddo instance
+
+  const [isLoading, setIsLoading] = useState(true); // State for loading status
+  const [reservations, setReservations] = useState([]); // State to hold reservation resources
+
+  useEffect(() => {
+    if (!roomIds.length) return; // Return if no room IDs are provided
+
+    // Function to fetch room reservation resources
+    const trigger = async () => {
+      try {
+        setIsLoading(true); // Set loading state to true
 
         const start = new Date();
         start.setHours(6, 0, 0, 0);
 
-        const staffIdss = [
-          "a0ebn000001r5fKAAQ",
-          "a0ebn000001r5x5AAA",
-          "a0ebn000001r6oIAAQ",
-          "a0ebn000001r7GVAAY",
-          "a0ebn000001r8IDAAY",
-          "a0ebn000001r8JrAAI",
-          "a0ebn000001r8q5AAA",
-          "a0ebn000001r9z3AAA",
-          "a0ebn000001rAS5AAM",
-          "a0ebn000001rAWvAAM",
-          "a0ebn000001rAdNAAU",
-        ];
-
         const end = new Date(start);
-        end.setHours(25, 0, 0, 0);
+        end.setHours(24, 0, 0, 0);
+
         const timeSlots = await gomeddo
-          .buildTimeSlotsRequest(start, end)
-          // .withField("B25__Staff__c", staffIds)
-          .withField(
-            "B25__Resource__c",
-            roomResources.map((resource) => resource.id)
-          )
-          .withDuration(30)
+          .buildTimeSlotsRequest(start, end) // Request time slots for the given date range
+          .withField("B25__Resource__c", roomIds) // Filter by room IDs
+          .withDuration(30) // Set duration for time slots
           .getResults();
 
-        const roomTimes = timeSlots.getTimeSlots().flatMap((timeSlot) =>
-          timeSlot.getReservations().map((reservation) => ({
-            id: reservation.id, // Store reservation ID
-            roomId: reservation.getCustomProperty("B25__Resource__c"),
-            start: timeSlot.startOfSlot,
-            end: timeSlot.endOfSlot,
-            staffId: reservation.setCustomProperty("B25__Staff__c", staffIdss),
-          }))
-        );
+        const reservations = timeSlots
+          .getTimeSlots()
+          .flatMap((timeSlot) => timeSlot.getReservations()); // Get reservations from time slots
 
-        setReservations(roomTimes); // Store reservations
-        console.log(timeSlots);
-        const dentistsData = dentistResources.map((dentist) => {
-          const rooms = roomResources
-            .filter((room) => room.parentId === dentist.id)
-            .map((room) => ({
-              id: room.id,
-              name: room.name,
-              timeSlots: roomTimes.filter(
-                (roomTime) => roomTime.roomId === room.id
-              ),
-            }));
-
-          return {
-            id: dentist.id,
-            name: dentist.name,
-            city: dentist.getCustomProperty("Dentist_City__c"),
-            address: dentist.getCustomProperty("Dentist_Location__c"),
-            rating: dentist.getCustomProperty("Dentist_Rating__c"),
-            ratingType: "Excellent",
-            price: dentist.getCustomProperty("B25__Default_Price__c"),
-            imageUrl: dentist.getCustomProperty("B25__Image_Url__c"),
-            staff: dentist.getCustomProperty("B25__Staff__c"),
-            rooms: rooms,
-          };
-        });
-
-        setDentists(dentistsData);
+        setReservations(reservations); // Set reservation resources state
       } catch (error) {
-        console.error("Error fetching dentists:", error);
+        console.error(error); // Log error if any
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Set loading state to false
       }
     };
 
-    trigger();
-  }, [gomeddo]);
+    trigger(); // Trigger the fetching function
+  }, [gomeddo, roomIds]);
 
-  return { isLoading, dentists, staffIds, reservations };
+  return {
+    isLoading,
+    reservations,
+  };
 }
-
-export function useDentist(id) {
-  const gomeddo = useGomeddo();
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [dentist, setDentist] = useState(undefined);
-
-  useEffect(() => {
-    const trigger = async () => {
-      setIsLoading(true);
-
-      const results = await gomeddo
-        .buildResourceRequest()
-        .includeAllResourcesAt(id)
-        .includeAdditionalField([
-          "Dentist_City__c",
-          "Dentist_Location__c",
-          "Dentist_Rating__c",
-          "B25__Image_Url__c",
-          "B25__Default_Price__c",
-        ])
-        .getResults();
-
-      const dentist = results.getResource(id);
-      const resourceIds = results.getResourceIds();
-      const resources = resourceIds.map((id) => results.getResource(id));
-
-      setDentist({
-        id: dentist.id,
-        name: dentist.name,
-        city: dentist.getCustomProperty("Dentist_City__c"),
-        address: dentist.getCustomProperty("Dentist_Location__c"),
-        rating: dentist.getCustomProperty("Dentist_Rating__c"),
-        ratingType: "Excellent",
-        price: dentist.getCustomProperty("B25__Default_Price__c"),
-        imageUrl: dentist.getCustomProperty("B25__Image_Url__c"),
-        // staff: dentist.getCustomProperty("B25__Staff__c"),
-        rooms: resources
-          .filter((room) => room.parentId === dentist.id)
-          .map((room) => ({
-            id: room.id,
-            name: room.name,
-          })),
-      });
-
-      setIsLoading(false);
-    };
-
-    trigger();
-  }, [id, gomeddo]);
-
-  return { isLoading, dentist };
-}
-
-// export function useReservation(id, reservations = []) {
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [reservation, setReservation] = useState(undefined);
-
-//   useEffect(() => {
-//     setIsLoading(true);
-
-//     // find the reservation in the array by id
-//     const reservationData = reservations.find(res => res.id === id);
-
-//     // update the reservation state
-//     setReservation(reservationData);
-//     setIsLoading(false);
-//   }, [id, reservations]);
-
-//   return { isLoading, reservation };
-// }
