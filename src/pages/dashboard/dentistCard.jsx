@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "react-feather";
-import Button from "../../components/button";
 import { useState } from "react";
+import { ArrowRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/button";
+import Skeleton from "../../components/skeleton";
+import { useStateContext } from "../../sdk/stateContext";
 
 function formatDate(date) {
   return new Date(date).toLocaleString("en-US", {
@@ -11,57 +13,50 @@ function formatDate(date) {
   });
 }
 
-const timeSlots = Array.from(Array(4).keys()).map((i) => {
-  const start = new Date();
-  start.setHours(9 + i * 2, 0, 0, 0);
-  const end = new Date(start);
-  end.setHours(11 + i * 2, 0, 0, 0);
-
-  return {
-    id: i,
-    start: start,
-    end: end,
-  };
-});
-
 export default function DentistCard({
-  id,
-  name,
-  city,
-  address,
-  ratingType,
-  rating,
-  imageUrl,
-  rooms,
+  dentistResource,
+  roomResources,
+  reservationResources,
+  reservationsLoading,
 }) {
+  const navigate = useNavigate();
+
+  const id = dentistResource.id;
+  const name = dentistResource.name;
+  const city = dentistResource.getCustomProperty("Dentist_City__c");
+  const address = dentistResource.getCustomProperty("Dentist_Location__c");
+  const rating = dentistResource.getCustomProperty("Dentist_Rating__c");
+  const price = dentistResource.getCustomProperty("B25__Default_Price__c");
+  const imageUrl = dentistResource.getCustomProperty("B25__Image_Url__c");
+  const ratingType = "Excellent";
+
+  const timeSlots = reservationResources.reduce((unique, timeSlot) => {
+    const start = timeSlot.startDatetime;
+    const end = timeSlot.endDatetime;
+
+    const existing = unique.find(
+      (timeSlot) =>
+        timeSlot.start.getTime() === start.getTime() &&
+        timeSlot.end.getTime() === end.getTime()
+    );
+
+    if (!!existing) {
+      existing.reservations.push(timeSlot);
+    } else {
+      unique.push({
+        start: start,
+        end: end,
+        reservations: [timeSlot],
+      });
+    }
+
+    return unique;
+  }, []);
+
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
   const [showMore, setShowMore] = useState(false);
 
-  const timeSlots = rooms
-    .flatMap((room) => room.timeSlots)
-    .reduce((unique, timeSlot) => {
-      const roomId = timeSlot.roomId;
-      const start = new Date(timeSlot.start);
-      const end = new Date(timeSlot.end);
-
-      const existing = unique.find(
-        (timeSlot) =>
-          timeSlot.start.getTime() === start.getTime() &&
-          timeSlot.end.getTime() === end.getTime()
-      );
-
-      if (!!existing) {
-        existing.roomIds.push(roomId);
-      } else {
-        unique.push({
-          start: start,
-          end: end,
-          roomIds: [roomId],
-        });
-      }
-
-      return unique;
-    }, []);
+  const { setSelectedReservation } = useStateContext();
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
@@ -74,13 +69,15 @@ export default function DentistCard({
             {ratingType} <span className="font-medium">{rating}</span>
           </div>
         </div>
+        {reservationsLoading &&
+          Array.from(Array(3).keys()).map((i) => (
+            <Skeleton key={i} className="h-10" />
+          ))}
         {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
           <Button
             key={i}
-            active={i === selectedTimeSlot}
-            onClick={() =>
-              setSelectedTimeSlot((state) => (state !== i ? i : undefined))
-            }
+            active={selectedTimeSlot === i}
+            onClick={() => setSelectedTimeSlot(i)}
           >
             {formatDate(timeSlot.start)} - {formatDate(timeSlot.end)}
           </Button>
@@ -94,16 +91,15 @@ export default function DentistCard({
           </Button>
         )}
         {selectedTimeSlot != null && (
-          <Link
-            to={`/dentist/${id}?start=${timeSlots[
-              selectedTimeSlot
-            ].start.getTime()}&end=${timeSlots[
-              selectedTimeSlot
-            ].end.getTime()}&roomIds=${timeSlots[selectedTimeSlot].roomIds}`}
-            className="ms-auto hover:scale-105 transition-all"
-          >
-            <ArrowRight className="size-10" />
-          </Link>
+          <ArrowRight
+            className="ms-auto hover:scale-105 transition-all size-10 cursor-pointer"
+            onClick={() => {
+              setSelectedReservation(
+                timeSlots[selectedTimeSlot].reservations[0]
+              );
+              navigate("/dentist");
+            }}
+          />
         )}
       </div>
     </div>
