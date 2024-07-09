@@ -38,6 +38,7 @@ export default function DentistPage() {
   const phoneRef = useRef();
   const emailRef = useRef();
   const agreementRef = useRef();
+  const messageRef = useRef();
 
   const handleFormChange = () => {
     // Basic validation: Check if all required fields are filled
@@ -64,13 +65,20 @@ export default function DentistPage() {
       );
       contact.setCustomProperty("Phone", phoneRef.current.value);
 
+      // Get message from textarea
+      const message = messageRef.current.value;
+      selectedReservation.setCustomProperty("Dentist_Message__c", message);
+
       selectedReservation.setCustomProperty(
         "B25__Reservation_Type__c",
         "a0Ubn0000017cw1EAA"
       );
+
+      // Assuming 'setResource' is a function to set a property
       selectedReservation.setResource({
         id: selectedReservation.getCustomProperty("B25__Resource__c"),
       });
+
       selectedReservation.setContact(contact);
 
       const response = await gomeddo.saveReservation(selectedReservation);
@@ -135,6 +143,7 @@ export default function DentistPage() {
               Message
             </label>
             <textarea
+              ref={messageRef}
               placeholder="Include a message.."
               id="message"
               className="w-full min-h-24 px-3 py-2 text-gray-700 border rounded focus:outline-none focus:border-blue-500"
