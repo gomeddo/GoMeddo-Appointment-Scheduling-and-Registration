@@ -47,7 +47,7 @@ The application interface allows users to specify their preferences for a dentis
      - `B25__Image_Url__c` (URL Field)
      - `B25__Default_Price__c` (Currency Field)
 
-   - Add the following custom fields to the contact object provide a message for each dentist:
+   - Add the following custom fields to the reservation object provide a message for each dentist:
 
      - `Dentist_Message__c` (Long Text Area Field)
 
