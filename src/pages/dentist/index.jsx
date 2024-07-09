@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
@@ -160,12 +160,13 @@ export default function DentistPage() {
             <p>You agree with our friendly privacy policy</p>
           </div>
           <Link to="/">
-            <Button>Cancel</Button>
+            <Button className="w-full">Cancel</Button>
           </Link>
           <Button
             disabled={!formValid}
             active={formValid}
             onClick={handleSubmit}
+            className="w-full"
           >
             Confirm
           </Button>
