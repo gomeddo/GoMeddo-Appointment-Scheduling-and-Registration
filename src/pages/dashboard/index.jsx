@@ -11,14 +11,16 @@ import { useMemo } from "react";
 export default function DashboardPage() {
   // Fetch dentist and room resources using custom hooks
   const { isLoading: dentistLoading, dentists, rooms } = useDentistResources();
+  
+  // Fetch staff resources using custom hook
+  const { isLoading: staffLoading, staffIds, staff } = useStaffResources();
+
   // Use useMemo to memoize room IDs for useRoomReservationResources hook dependency
   const roomIds = useMemo(() => rooms.map((room) => room.id), [rooms]);
 
-  // Fetch staff resources using custom hook
-  const { staff } = useStaffResources();
-  // Fetch room reservations based on room IDs using custom hook
+  // Fetch room reservations based on room IDs and staff IDs using custom hook
   const { isLoading: reservationLoading, reservations } =
-    useRoomReservationResources(roomIds);
+    useRoomReservationResources(roomIds, staffIds);
 
   return (
     <div className="flex flex-col gap-6">
@@ -30,8 +32,6 @@ export default function DashboardPage() {
         ))}
       {/* Render dentist cards once data is loaded */}
       {!dentistLoading &&
-        !!dentists &&
-        !!rooms &&
         dentists.map((dentist) => {
           // Filter rooms for the current dentist
           const dentistRooms = rooms.filter(

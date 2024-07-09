@@ -94,21 +94,24 @@ export function useStaffResources() {
     trigger(); // Trigger the fetching function
   }, [gomeddo]);
 
+  // Extract staffIds from staff resources
+  const staffIds = useMemo(() => staff.map((staff) => staff.id), [staff]);
   return {
     isLoading,
+    staffIds,
     staff,
   };
 }
 
 // Custom hook to fetch room reservation resources
-export function useRoomReservationResources(roomIds) {
+export function useRoomReservationResources(roomIds, staffIds) {
   const gomeddo = useGomeddo(); // Get the GoMeddo instance
 
   const [isLoading, setIsLoading] = useState(true); // State for loading status
   const [reservations, setReservations] = useState([]); // State to hold reservation resources
 
   useEffect(() => {
-    if (!roomIds.length) return; // Return if no room IDs are provided
+    if (!roomIds.length || !staffIds.length) return; // Return if no room IDs or staff IDs are provided
 
     // Function to fetch room reservation resources
     const trigger = async () => {
@@ -123,6 +126,7 @@ export function useRoomReservationResources(roomIds) {
 
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end) // Request time slots for the given date range
+          .withField("B25__Staff__c", staffIds) // Filter by staff IDs
           .withField("B25__Resource__c", roomIds) // Filter by room IDs
           .withDuration(30) // Set duration for time slots
           .getResults();
@@ -140,7 +144,7 @@ export function useRoomReservationResources(roomIds) {
     };
 
     trigger(); // Trigger the fetching function
-  }, [gomeddo, roomIds]);
+  }, [gomeddo, roomIds, staffIds]);
 
   return {
     isLoading,
