@@ -80,6 +80,11 @@ export default function DentistCard({
           Array.from(Array(3).keys()).map((i) => (
             <Skeleton key={i} className="h-10" /> // Display loading skeletons while reservations are loading
           ))}
+        {timeSlots.length === 0 && !reservationsLoading && (
+          <div className="text-center text-red-500 text-lg font-bold">
+            No available time slots currently
+          </div>
+        )}
         {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
           <Button
             key={i}
