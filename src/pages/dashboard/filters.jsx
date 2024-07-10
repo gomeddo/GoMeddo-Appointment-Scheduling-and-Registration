@@ -96,7 +96,6 @@ export default function Filters() {
               ))}
             </div>
           </div>
-          <Button>Deals</Button>
         </div>
       </div>
       <div className="flex flex-col gap-4">
