@@ -43,6 +43,12 @@ export default function DashboardPage() {
         Array.from(Array(10).keys()).map((i) => (
           <Skeleton key={i} className="h-96" />
         ))}
+      {/* Render message if no dentists match the search query */}
+      {!dentistLoading && filteredDentists.length === 0 && (
+        <div className="text-center text-grey text-3xl font-bold pt-40">
+          No Clinics match your search...
+        </div>
+      )}
       {/* Render dentist cards once data is loaded */}
       {!dentistLoading &&
         filteredDentists.map((dentist) => {
