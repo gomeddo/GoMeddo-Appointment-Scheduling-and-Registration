@@ -14,6 +14,15 @@ export default function Filters() {
   const [showPrice, setShowPrice] = useState(false);
   const searchRef = useRef();
 
+  const handleSearchChange = () => {
+    setSearch(searchRef.current.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearch(""); // Clear the search context
+    searchRef.current.value = ""; // Clear the input field
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 xl:gap-6">
       <div className="flex flex-col gap-4">
@@ -24,13 +33,16 @@ export default function Filters() {
             placeholder="Search..."
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             defaultValue={search}
-            onChange={() => setSearch(searchRef.current.value)} // Update search term on change
+            onChange={handleSearchChange}
           />
+          {!!search && ( // Render 'X' only if search is not empty
+            <X className="cursor-pointer" onClick={handleClearSearch} />
+          )}
         </div>
         <div className="flex flex-row gap-4">
           <Button
             active={!!search && !!search.length}
-            onClick={() => setSearch(searchRef.current.value)}
+            onClick={handleSearchChange}
           >
             {!!search && !!search.length && (
               <X
@@ -38,8 +50,7 @@ export default function Filters() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setSearch();
-                  searchRef.current.value = "";
+                  handleClearSearch();
                 }}
               />
             )}
