@@ -86,7 +86,7 @@ Perform the following steps to run the project in a local environment.
 
 #### Link to Github and Wiki
 
-For further information on utilizing the GoMeddo Javascript SDK, visit [GoMeddo JS SDK wiki](https://github.com/gomeddo/Room-and-Facilities-bookings).
+For further information on utilizing the GoMeddo Javascript SDK, visit [GoMeddo JS SDK wiki](https://github.com/GoMeddo/js-sdk/wiki) and to explore the frontend example GitHub repository  [GoMeddo Room and Facilities Bookings](https://github.com/gomeddo/Room-and-Facilities-booking).
 
 #### Similar use cases
 
