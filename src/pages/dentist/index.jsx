@@ -101,7 +101,7 @@ export default function DentistPage() {
   return (
     <div className="flex flex-col gap-8">
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center h-full pt-40">
           <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
           <p className="mt-4 text-xl font-semibold text-black">
             Your appointment is being made...
