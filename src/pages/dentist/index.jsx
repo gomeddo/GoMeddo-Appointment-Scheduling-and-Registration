@@ -110,7 +110,7 @@ export default function DentistPage() {
       ) : (
         <div>
           <h2 className="text-3xl font-semibold">Make an appointment</h2>
-          <hr className="bg-gray-300 h-0.5 my-4" />
+          <hr className="bg-gray-300 h-0.5 my-8" />
           <div className="flex flex-row gap-16 items-start">
             <div className="relative">
               <div className="bg-black rounded-3xl w-[14rem] h-[22rem] me-8 mb-8" />
