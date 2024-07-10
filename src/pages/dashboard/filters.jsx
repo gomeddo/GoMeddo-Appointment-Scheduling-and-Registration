@@ -24,6 +24,7 @@ export default function Filters() {
             placeholder="Search..."
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             defaultValue={search}
+            onChange={() => setSearch(searchRef.current.value)} // Update search term on change
           />
         </div>
         <div className="flex flex-row gap-4">

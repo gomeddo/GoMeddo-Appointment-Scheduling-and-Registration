@@ -7,11 +7,12 @@ import {
 import Filters from "./filters";
 import Skeleton from "../../components/skeleton";
 import { useMemo } from "react";
+import { useFilterContext } from "../../sdk/filterContext"; // Import the filter context
 
 export default function DashboardPage() {
   // Fetch dentist and room resources using custom hooks
   const { isLoading: dentistLoading, dentists, rooms } = useDentistResources();
-  
+
   // Fetch staff resources using custom hook
   const { isLoading: staffLoading, staffIds, staff } = useStaffResources();
 
@@ -21,6 +22,18 @@ export default function DashboardPage() {
   // Fetch room reservations based on room IDs and staff IDs using custom hook
   const { isLoading: reservationLoading, reservations } =
     useRoomReservationResources(roomIds, staffIds);
+
+  // Get the search term from the filter context
+  const { search } = useFilterContext();
+
+  // Filter dentists based on the search term
+  const filteredDentists = useMemo(() => {
+    if (!search) return dentists;
+    const searchTerm = search.toLowerCase();
+    return dentists.filter((dentist) =>
+      dentist.name.toLowerCase().includes(searchTerm)
+    );
+  }, [search, dentists]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,7 +45,7 @@ export default function DashboardPage() {
         ))}
       {/* Render dentist cards once data is loaded */}
       {!dentistLoading &&
-        dentists.map((dentist) => {
+        filteredDentists.map((dentist) => {
           // Filter rooms for the current dentist
           const dentistRooms = rooms.filter(
             (room) => room.parentId === dentist.id
