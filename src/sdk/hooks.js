@@ -1,21 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import GoMeddo from "@gomeddo/sdk";
 import { useFilterContext } from "./filterContext";
-import {
-  FIELD_DENTIST_CITY,
-  FIELD_DENTIST_LOCATION,
-  FIELD_DENTIST_RATING,
-  FIELD_IMAGE_URL,
-  FIELD_DEFAULT_PRICE,
-  FIELD_STAFF,
-  FIELD_RESOURCE_NAME,
-  FIELD_START,
-  FIELD_END,
-  FIELD_TOTAL_PRICE,
-  FIELD_DURATION,
-  LOCATION_ID,
-  DIMENSION_RECORD_STAFF,
-} from "./constants";
 
 // Custom hook to initialize and memoize the GoMeddo instance
 export function useGomeddo() {
@@ -40,20 +25,20 @@ export function useDentistResources() {
       try {
         const results = await gomeddo
           .buildResourceRequest()
-          .includeAllResourcesAt(LOCATION_ID) // Include resources at a specific location
+          .includeAllResourcesAt("a0Zbn000000gzqHEAQ") // Include resources at a specific location
           .includeAdditionalField([
-            FIELD_DENTIST_CITY,
-            FIELD_DENTIST_LOCATION,
-            FIELD_DENTIST_RATING,
-            FIELD_IMAGE_URL,
-            FIELD_DEFAULT_PRICE,
+            "Dentist_City__c",
+            "Dentist_Location__c",
+            "Dentist_Rating__c",
+            "B25__Image_Url__c",
+            "B25__Default_Price__c",
           ])
           .getResults();
 
         const resourceIds = results.getResourceIds(); // Get all resource IDs
         const resources = resourceIds.map((id) => results.getResource(id)); // Get resources by ID
         const cityResources = resources.filter(
-          (resource) => resource.parentId === LOCATION_ID
+          (resource) => resource.parentId === "a0Zbn000000gzqHEAQ"
         ); // Filter city resources
         const dentistResources = cityResources.flatMap((city) =>
           resources.filter((resource) => resource.parentId === city.id)
@@ -96,7 +81,7 @@ export function useStaffResources() {
         setStaff([]);
 
         const results = await gomeddo
-          .buildDimensionRecordRequest(DIMENSION_RECORD_STAFF) // Request staff records
+          .buildDimensionRecordRequest("B25__Staff__c") // Request staff records
           .getResults();
 
         const objectIds = results.getObjectIds(); // Get all object IDs
@@ -148,8 +133,8 @@ export function useRoomReservationResources(roomIds, staffIds) {
 
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end) // Request time slots for the given date range
-          .withField(FIELD_STAFF, staffIds) // Filter by staff IDs
-          .withField(FIELD_RESOURCE_NAME, roomIds) // Filter by room IDs
+          .withField("B25__Staff__c", staffIds) // Filter by staff IDs
+          .withField("B25__Resource__c", roomIds) // Filter by room IDs
           .withDuration(30) // Set duration for time slots
           .getResults();
 
@@ -188,13 +173,13 @@ export function useReservationResource(id) {
         const result = await gomeddo
           .buildReservationRequest()
           .includeAdditionalFields([
-            FIELD_STAFF,
-            FIELD_RESOURCE_NAME,
-            FIELD_START,
-            FIELD_END,
-            FIELD_TOTAL_PRICE,
-            FIELD_DURATION,
-            FIELD_DENTIST_RATING,
+            "Dentist_Staff__c",
+            "B25__ResourceName__c",
+            "B25__Start__c",
+            "B25__End__c",
+            "B25__Total_Price__c",
+            "Duration_in_Hours__c",
+            "Dentist_Rating__c"
           ])
           .withIds(id)
           .getResults();
