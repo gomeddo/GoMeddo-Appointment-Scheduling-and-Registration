@@ -5,6 +5,7 @@ import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
 import { useStateContext } from "../../sdk/stateContext";
 import { useGomeddo } from "../../sdk/hooks";
+import { Contact } from "@gomeddo/sdk";
 import {
   MESSAGE_LOADING_BOOKING_APPOINTMENT,
   LABEL_MAKE_APPOINTMENT,
@@ -20,6 +21,8 @@ import {
   RESERVATION_RESOURCE_TYPE_ID,
   FIELD_RESERVATION_RESOURCE_TYPE,
   FIELD_RESOURCE_OBJECT,
+  FIELD_RESERVATION_MESSAGE,
+  FIELD_RESERVATION_BASE_PRICE,
   FIELD_RESOURCE_DEFAULT_PRICE,
 } from "../../sdk/constants";
 
