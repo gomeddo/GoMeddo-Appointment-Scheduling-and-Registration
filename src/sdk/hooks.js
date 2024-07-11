@@ -179,6 +179,7 @@ export function useReservationResource(id) {
             "B25__End__c",
             "B25__Total_Price__c",
             "Duration_in_Hours__c",
+            "Dentist_Rating__c"
           ])
           .withIds(id)
           .getResults();

@@ -15,7 +15,14 @@ export default function ConfirmationPage() {
   };
 
   if (isLoading || !reservation) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-full pt-40">
+        <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
+        <p className="mt-4 text-xl font-semibold text-black">
+          Loading...
+        </p>
+      </div>
+    );
   }
 
   const staff = reservation.getCustomProperty("Dentist_Staff__c");
@@ -24,6 +31,7 @@ export default function ConfirmationPage() {
   const end = new Date(reservation.getCustomProperty("B25__End__c"));
   const cost = reservation.getCustomProperty("B25__Total_Price__c");
   const duration = reservation.getCustomProperty("Duration_in_Hours__c");
+  const rating = reservation.getCustomProperty("Dentist_Rating__c");
 
   return (
     <div className="flex flex-col gap-8">
@@ -32,7 +40,9 @@ export default function ConfirmationPage() {
           <CheckCircle className="size-3 inline-block me-1" />
           Confirmed
         </div>
-        <div className="font-bold">{start.toLocaleString()}</div>
+        <div className="font-bold">
+          Appointment Made For: {start.toLocaleString()}
+        </div>
       </div>
       <hr className="bg-gray-300 h-0.5" />
       <div className="flex flex-row gap-16">
@@ -58,7 +68,7 @@ export default function ConfirmationPage() {
           <div>
             <div className="font-bold text-2xl">{roomName}</div>
             <div className="font-medium">Amsterdam suid, 256781u892</div>
-            <div className="font-medium">Good 7.2</div>
+            <div className="font-medium">Clinic Rating: {rating}</div>
           </div>
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
             <div className="flex justify-between font-medium text-2xl py-4">
@@ -68,7 +78,7 @@ export default function ConfirmationPage() {
             <hr className="border-t border-black opacity-20 my-4 pb-4" />
             <div className="flex justify-between">
               <div className="font-medium">Total</div>
-              <div>EUR €: {cost}</div>
+              <div>USD: ${cost}</div>
             </div>
           </div>
           <div className="flex justify-end">
