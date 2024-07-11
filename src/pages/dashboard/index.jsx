@@ -8,6 +8,10 @@ import Filters from "./filters";
 import Skeleton from "../../components/skeleton";
 import { useMemo } from "react";
 import { useFilterContext } from "../../sdk/filterContext"; // Import the filter context
+import {
+  FIELD_RESOURCE_DEFAULT_PRICE,
+  MESSAGE_NO_CLINIC_MATCH_SEARCH,
+} from "../../sdk/constants";
 
 const timeFrameRanges = {
   all: [6, 24],
@@ -54,7 +58,7 @@ export default function DashboardPage() {
     if (price != null) {
       const priceRange = priceRanges[price];
       filteredDentists = filteredDentists.filter((dentist) => {
-        const price = dentist.getCustomProperty("B25__Default_Price__c");
+        const price = dentist.getCustomProperty(FIELD_RESOURCE_DEFAULT_PRICE);
         return price >= priceRange[0] && price <= priceRange[1];
       });
     }
@@ -82,7 +86,7 @@ export default function DashboardPage() {
       {/* Render message if no dentists match the search query */}
       {!dentistLoading && filteredDentists.length === 0 && (
         <div className="text-center text-grey text-3xl font-bold pt-40">
-          No Clinics match your search...
+          {MESSAGE_NO_CLINIC_MATCH_SEARCH}
         </div>
       )}
       {/* Render dentist cards once data is loaded */}
