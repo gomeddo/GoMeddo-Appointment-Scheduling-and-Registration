@@ -3,14 +3,19 @@ import React from "react";
 export const GOMEDDO_KEY = import.meta.env.VITE_GOMEDDO_KEY;
 
 export const FIELD_COUNTRY_ID = "a0Zbn000000gzqHEAQ";
+export const FIELD_RESERVATION_RESOURCE_TYPE_ID = "a0Ubn0000017cw1EAA";
+
 export const FIELD_RESOURCE_OBJECT = "B25__Resource__c";
 export const FIELD_STAFF_OBJECT = "B25__Staff__c";
 export const FIELD_RESOURCE_STAFF = "Dentist_Staff__c";
 export const FIELD_RESERVATION_RESOURCE_NAME = "B25__ResourceName__c";
 export const FIELD_RESERVATION_START_TIME = "B25__Start__c";
 export const FIELD_RESERVATION_END_TIME = "B25__End__c";
+export const FIELD_RESERVATION_MESSAGE = "Dentist_Message__c";
 export const FIELD_RESERVATION_TOTAL_COST = "B25__Total_Price__c";
 export const FIELD_RESERVATION_DURATION = "Duration_in_Hours__c";
+export const FIELD_RESERVATION_BASE_PRICE = "B25__Base_Price__c";
+export const FIELD_RESERVATION_RESOURCE_TYPE = "B25__Reservation_Type__c";
 export const FIELD_RESOURCE_RATING = "Dentist_Rating__c";
 export const FIELD_RESOURCE_CITY = "Dentist_City__c";
 export const FIELD_RESOURCE_LOCATION = "Dentist_Location__c";
