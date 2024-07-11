@@ -78,10 +78,6 @@ export default function DentistCard({
             <span className="font-medium">{rating}</span>
             {/* Display dentist rating */}
           </div>
-          <div className="text-sm py-4 flex">
-            <span className="font-bold">${price}</span>
-            {/* Display dentist rating */}
-          </div>
         </div>
         {reservationsLoading &&
           Array.from(Array(3).keys()).map((i) => (
