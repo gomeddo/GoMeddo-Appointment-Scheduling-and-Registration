@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const FilterContext = createContext({
@@ -27,7 +33,9 @@ export default function FilterProvider({ children }) {
     });
 
   const dateString = searchParams.get("date");
-  const date = dateString != null ? new Date(dateString) : new Date();
+  const date = useMemo(() => {
+    return dateString != null ? new Date(dateString) : new Date();
+  }, [dateString]);
 
   return (
     <FilterContext.Provider

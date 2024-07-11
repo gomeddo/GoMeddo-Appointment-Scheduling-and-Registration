@@ -9,6 +9,13 @@ import Skeleton from "../../components/skeleton";
 import { useMemo } from "react";
 import { useFilterContext } from "../../sdk/filterContext"; // Import the filter context
 
+const timeFrameRanges = {
+  all: [6, 24],
+  morning: [6, 12],
+  afternoon: [12, 16],
+  evening: [16, 24],
+};
+
 export default function DashboardPage() {
   // Fetch dentist and room resources using custom hooks
   const { isLoading: dentistLoading, dentists, rooms } = useDentistResources();
@@ -24,7 +31,7 @@ export default function DashboardPage() {
     useRoomReservationResources(roomIds, staffIds);
 
   // Get the search term from the filter context
-  const { search } = useFilterContext();
+  const { search, timeFrame } = useFilterContext();
 
   // Filter dentists based on the search term
   const filteredDentists = useMemo(() => {
@@ -34,6 +41,15 @@ export default function DashboardPage() {
       dentist.name.toLowerCase().includes(searchTerm)
     );
   }, [search, dentists]);
+
+  const filteredReservations = useMemo(() => {
+    if (!timeFrame) return reservations;
+    const range = timeFrameRanges[timeFrame];
+    return reservations.filter((reservation) => {
+      const start = new Date(reservation.startDatetime);
+      return start.getHours() >= range[0] && start.getHours() <= range[1];
+    });
+  }, [timeFrame, reservations]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -58,7 +74,7 @@ export default function DashboardPage() {
           );
           const roomIds = dentistRooms.map((room) => room.id);
           // Filter reservations for the current dentist's rooms
-          const roomReservations = reservations.filter((reservation) =>
+          const roomReservations = filteredReservations.filter((reservation) =>
             roomIds.includes(reservation.getCustomProperty("B25__Resource__c"))
           );
 

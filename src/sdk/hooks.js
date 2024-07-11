@@ -107,13 +107,6 @@ export function useStaffResources() {
   };
 }
 
-const hourRange = {
-  all: [0, 24],
-  morning: [6, 12],
-  afternoon: [12, 16],
-  evening: [16, 24],
-};
-
 // Custom hook to fetch room reservation resources
 export function useRoomReservationResources(roomIds, staffIds) {
   const gomeddo = useGomeddo(); // Get the GoMeddo instance
@@ -121,7 +114,7 @@ export function useRoomReservationResources(roomIds, staffIds) {
   const [isLoading, setIsLoading] = useState(true); // State for loading status
   const [reservations, setReservations] = useState([]); // State to hold reservation resources
 
-  const { date, timeFrame } = useFilterContext();
+  const { date } = useFilterContext();
 
   useEffect(() => {
     if (!roomIds.length || !staffIds.length) return; // Return if no room IDs or staff IDs are provided
@@ -135,10 +128,8 @@ export function useRoomReservationResources(roomIds, staffIds) {
         const start = new Date(date);
         const end = new Date(start);
 
-        const range = hourRange[timeFrame];
-
-        start.setHours(range[0], 0, 0, 0);
-        end.setHours(range[1], 0, 0, 0);
+        start.setHours(6, 0, 0, 0);
+        end.setHours(24, 0, 0, 0);
 
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end) // Request time slots for the given date range
@@ -160,7 +151,7 @@ export function useRoomReservationResources(roomIds, staffIds) {
     };
 
     trigger(); // Trigger the fetching function
-  }, [gomeddo, date, timeFrame, roomIds, staffIds]);
+  }, [gomeddo, date, roomIds, staffIds]);
 
   return {
     isLoading,
