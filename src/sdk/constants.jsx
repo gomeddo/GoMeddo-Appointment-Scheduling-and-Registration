@@ -2,8 +2,8 @@ import React from "react";
 
 export const GOMEDDO_KEY = import.meta.env.VITE_GOMEDDO_KEY;
 
-export const FIELD_COUNTRY_ID = "a0Zbn000000gzqHEAQ";
-export const FIELD_RESERVATION_RESOURCE_TYPE_ID = "a0Ubn0000017cw1EAA";
+export const RESOURCE_COUNTRY_ID = "a0Zbn000000gzqHEAQ";
+export const RESERVATION_RESOURCE_TYPE_ID = "a0Ubn0000017cw1EAA";
 
 export const FIELD_RESOURCE_OBJECT = "B25__Resource__c";
 export const FIELD_STAFF_OBJECT = "B25__Staff__c";
