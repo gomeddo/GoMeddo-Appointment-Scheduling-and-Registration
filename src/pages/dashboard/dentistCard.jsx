@@ -31,7 +31,6 @@ export default function DentistCard({
   const rating = dentistResource.getCustomProperty("Dentist_Rating__c");
   const price = dentistResource.getCustomProperty("B25__Default_Price__c");
   const imageUrl = dentistResource.getCustomProperty("B25__Image_Url__c");
-  const ratingType = "Excellent";
 
   // Group reservations by unique time slots
   const timeSlots = reservationResources.reduce((unique, timeSlot) => {
@@ -71,11 +70,10 @@ export default function DentistCard({
           <div className="text-2xl font-medium">{name}</div>{" "}
           {/* Display dentist name */}
           <div>{address}</div> {/* Display dentist address */}
-          <div className="text-sm py-4 flex gap-2">
-            <span className="font-bold">${price}</span>
+          <div className="text-sm py-4 flex flex-col gap-2">
+            <span className="font-medium">Price Per Appointment: ${price}</span>
             {/* Display dentist price */}
-            <span>{ratingType}</span>
-            <span className="font-medium">{rating}</span>
+            <span>Clinic Rating: {rating}</span>
             {/* Display dentist rating */}
           </div>
         </div>
