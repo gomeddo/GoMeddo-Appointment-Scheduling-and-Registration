@@ -67,7 +67,7 @@ export default function ConfirmationPage() {
         <div className="flex flex-col gap-8 flex-1">
           <div>
             <div className="font-bold text-2xl">{roomName}</div>
-            <div className="font-medium">Amsterdam suid, 256781u892</div>
+            <div className="font-medium">5678 West Sunset Boulevard, Los Angeles, CA 90028</div>
             <div className="font-medium">Clinic Rating: {rating}</div>
           </div>
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
