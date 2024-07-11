@@ -158,3 +158,41 @@ export function useRoomReservationResources(roomIds, staffIds) {
     reservations,
   };
 }
+
+export function useReservationResource(id) {
+  const gomeddo = useGomeddo();
+
+  const [reservation, setReservation] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const trigger = async () => {
+      try {
+        setIsLoading(true);
+
+        const result = await gomeddo
+          .buildReservationRequest()
+          .includeAdditionalFields([
+            "Dentist_Staff__c",
+            "B25__ResourceName__c",
+            "B25__Start__c",
+            "B25__End__c",
+            "B25__Total_Price__c",
+            "Duration_in_Hours__c",
+          ])
+          .withIds(id)
+          .getResults();
+
+        setReservation(result.getReservation(id));
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    trigger();
+  }, [id, gomeddo]);
+
+  return { reservation, isLoading };
+}

@@ -30,7 +30,7 @@ const FormControl = forwardRef(
 );
 
 export default function DentistPage() {
-  const { selectedReservation } = useStateContext();
+  const { selectedReservation, selectedDentist } = useStateContext();
   const navigate = useNavigate();
 
   const [formValid, setFormValid] = useState(false);
@@ -59,6 +59,7 @@ export default function DentistPage() {
   };
 
   const gomeddo = useGomeddo();
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -72,10 +73,13 @@ export default function DentistPage() {
       // Get message from textarea
       const message = messageRef.current.value;
       selectedReservation.setCustomProperty("Dentist_Message__c", message);
-
       selectedReservation.setCustomProperty(
         "B25__Reservation_Type__c",
         "a0Ubn0000017cw1EAA"
+      );
+      selectedReservation.setCustomProperty(
+        "B25__Base_Price__c",
+        selectedDentist.getCustomProperty("B25__Default_Price__c")
       );
 
       // Assuming 'setResource' is a function to set a property
@@ -86,6 +90,7 @@ export default function DentistPage() {
       selectedReservation.setContact(contact);
 
       const response = await gomeddo.saveReservation(selectedReservation);
+      console.log(response);
       navigate("/confirmation/" + response.id);
       setIsLoading(false);
     } catch (error) {
@@ -94,7 +99,7 @@ export default function DentistPage() {
     }
   };
 
-  if (!selectedReservation) {
+  if (!selectedReservation || !selectedDentist) {
     return <Navigate to="/" />;
   }
 

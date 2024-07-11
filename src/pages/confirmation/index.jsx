@@ -1,14 +1,29 @@
 import { useNavigate, useParams } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
 import { CheckCircle } from "react-feather";
+import { useReservationResource } from "../../sdk/hooks";
 
 export default function ConfirmationPage() {
   const { id } = useParams();
+
+  const { isLoading, reservation } = useReservationResource(id);
+
   const navigate = useNavigate();
 
   const handleBackToDashboard = () => {
     navigate("/");
   };
+
+  if (isLoading || !reservation) {
+    return <div>Loading...</div>;
+  }
+
+  const staff = reservation.getCustomProperty("Dentist_Staff__c");
+  const roomName = reservation.getCustomProperty("B25__ResourceName__c");
+  const start = new Date(reservation.getCustomProperty("B25__Start__c"));
+  const end = new Date(reservation.getCustomProperty("B25__End__c"));
+  const cost = reservation.getCustomProperty("B25__Total_Price__c");
+  const duration = reservation.getCustomProperty("Duration_in_Hours__c");
 
   return (
     <div className="flex flex-col gap-8">
@@ -17,7 +32,7 @@ export default function ConfirmationPage() {
           <CheckCircle className="size-3 inline-block me-1" />
           Confirmed
         </div>
-        <div className="font-bold">Sun 16 July 2023 at 5:00pm</div>
+        <div className="font-bold">{start.toLocaleString()}</div>
       </div>
       <hr className="bg-gray-300 h-0.5" />
       <div className="flex flex-row gap-16">
@@ -41,23 +56,19 @@ export default function ConfirmationPage() {
         </div>
         <div className="flex flex-col gap-8 flex-1">
           <div>
-            <div className="font-bold text-2xl">Bright Smiles Amsterdam</div>
+            <div className="font-bold text-2xl">{roomName}</div>
             <div className="font-medium">Amsterdam suid, 256781u892</div>
             <div className="font-medium">Good 7.2</div>
           </div>
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
             <div className="flex justify-between font-medium text-2xl py-4">
-              <div>Dentist Appointment w/ Dr John</div>
-              <div className="font-normal">1h</div>
+              <div>Dentist Appointment w/ {staff}</div>
+              <div className="font-normal">{duration}h</div>
             </div>
             <hr className="border-t border-black opacity-20 my-4 pb-4" />
             <div className="flex justify-between">
-              <div className="font-medium">Taxes</div>
-              <div>EUR €: 0</div>
-            </div>
-            <div className="flex justify-between">
               <div className="font-medium">Total</div>
-              <div>EUR €: 230</div>
+              <div>EUR €: {cost}</div>
             </div>
           </div>
           <div className="flex justify-end">

@@ -59,7 +59,7 @@ export default function DentistCard({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(); // State to track selected time slot
   const [showMore, setShowMore] = useState(false); // State to toggle showing more/less time slots
 
-  const { setSelectedReservation } = useStateContext(); // Access context to set selected reservation
+  const { setSelectedDentist, setSelectedReservation } = useStateContext(); // Access context to set selected reservation
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
@@ -109,6 +109,7 @@ export default function DentistCard({
           <ArrowRight
             className="ms-auto hover:scale-105 transition-all size-10 cursor-pointer"
             onClick={() => {
+              setSelectedDentist(dentistResource);
               setSelectedReservation(
                 timeSlots[selectedTimeSlot].reservations[0]
               ); // Set selected reservation in context
