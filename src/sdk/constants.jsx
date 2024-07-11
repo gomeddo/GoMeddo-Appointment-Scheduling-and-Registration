@@ -1,3 +1,5 @@
+import React from "react"
+
 export const GOMEDDO_KEY = import.meta.env.VITE_GOMEDDO_KEY;
 
 export const FIELD_COUNTRY_ID = "a0Zbn000000gzqHEAQ";
@@ -49,7 +51,7 @@ export const LABEL_AGREEMENT_POLICY =
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_CONFIRM = "Confirm";
 
-export const FIELD_RESERVATION_STAFF = "Dentist_Staff__c";
+export const FIELD_RESOURCE_STAFF = "Dentist_Staff__c";
 export const FIELD_RESERVATION_RESOURCE_NAME = "B25__ResourceName__c";
 export const FIELD_RESERVATION_START_TIME = "B25__Start__c";
 export const FIELD_RESERVATION_END_TIME = "B25__End__c";
