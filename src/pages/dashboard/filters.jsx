@@ -8,8 +8,16 @@ const timeFrames = ["all", "morning", "afternoon", "evening"];
 const prices = [50, 100, 150, 200];
 
 export default function Filters() {
-  const { search, setSearch, timeFrame, setTimeFrame, price, setPrice } =
-    useFilterContext();
+  const {
+    date,
+    setDate,
+    search,
+    setSearch,
+    timeFrame,
+    setTimeFrame,
+    price,
+    setPrice,
+  } = useFilterContext();
 
   const [showPrice, setShowPrice] = useState(false);
   const searchRef = useRef();
@@ -105,6 +113,8 @@ export default function Filters() {
             placeholder="Search..."
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             type="date"
+            value={date.toISOString().slice(0, 10)}
+            onChange={(e) => setDate(e.target.value)}
           />
         </div>
         <div className="flex flex-row gap-4">

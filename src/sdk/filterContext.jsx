@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const FilterContext = createContext({
+  date: new Date(),
+  setDate: () => {},
   timeFrame: "all",
   setTimeFrame: () => {},
   search: "",
@@ -24,9 +26,15 @@ export default function FilterProvider({ children }) {
       return state;
     });
 
+  const dateString = searchParams.get("date");
+  const date = dateString != null ? new Date(dateString) : new Date();
+
   return (
     <FilterContext.Provider
       value={{
+        date: date,
+        setDate: (date) =>
+          setSearchValue("date", new Date(date).toISOString().slice(0, 10)),
         timeFrame: searchParams.get("timeFrame") ?? "all",
         setTimeFrame: (timeFrame) => setSearchValue("timeFrame", timeFrame),
         search: searchParams.get("search"),
