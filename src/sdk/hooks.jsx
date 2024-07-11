@@ -1,11 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import GoMeddo from "@gomeddo/sdk";
 import { useFilterContext } from "./filterContext";
+import {
+  GOMEDDO_KEY,
+  RESOURCE_COUNTRY_ID,
+  FIELD_RESOURCE_STAFF,
+  FIELD_RESOURCE_LOCATION,
+  FIELD_RESOURCE_CITY,
+  FIELD_RESOURCE_DEFAULT_PRICE,
+  FIELD_RESOURCE_IMG,
+  FIELD_RESOURCE_RATING,
+  FIELD_STAFF_OBJECT,
+  FIELD_RESERVATION_RESOURCE_NAME,
+  FIELD_RESERVATION_START_TIME,
+  FIELD_RESERVATION_END_TIME,
+  FIELD_RESERVATION_TOTAL_COST,
+  FIELD_RESERVATION_DURATION,
+  FIELD_RESOURCE_OBJECT,
+} from "./constants";
 
 // Custom hook to initialize and memoize the GoMeddo instance
 export function useGomeddo() {
   return useMemo(() => {
-    return new GoMeddo(import.meta.env.VITE_GOMEDDO_KEY); // Initialize GoMeddo with the provided API key
+    return new GoMeddo(GOMEDDO_KEY); // Initialize GoMeddo with the provided API key
   }, []);
 }
 
@@ -25,20 +42,20 @@ export function useDentistResources() {
       try {
         const results = await gomeddo
           .buildResourceRequest()
-          .includeAllResourcesAt("a0Zbn000000gzqHEAQ") // Include resources at a specific location
+          .includeAllResourcesAt(RESOURCE_COUNTRY_ID) // Include resources at a specific location
           .includeAdditionalField([
-            "Dentist_City__c",
-            "Dentist_Location__c",
-            "Dentist_Rating__c",
-            "B25__Image_Url__c",
-            "B25__Default_Price__c",
+            FIELD_RESOURCE_CITY,
+            FIELD_RESOURCE_LOCATION,
+            FIELD_RESOURCE_RATING,
+            FIELD_RESOURCE_IMG,
+            FIELD_RESOURCE_DEFAULT_PRICE,
           ])
           .getResults();
 
         const resourceIds = results.getResourceIds(); // Get all resource IDs
         const resources = resourceIds.map((id) => results.getResource(id)); // Get resources by ID
         const cityResources = resources.filter(
-          (resource) => resource.parentId === "a0Zbn000000gzqHEAQ"
+          (resource) => resource.parentId === RESOURCE_COUNTRY_ID
         ); // Filter city resources
         const dentistResources = cityResources.flatMap((city) =>
           resources.filter((resource) => resource.parentId === city.id)
@@ -81,7 +98,7 @@ export function useStaffResources() {
         setStaff([]);
 
         const results = await gomeddo
-          .buildDimensionRecordRequest("B25__Staff__c") // Request staff records
+          .buildDimensionRecordRequest(FIELD_STAFF_OBJECT) // Request staff records
           .getResults();
 
         const objectIds = results.getObjectIds(); // Get all object IDs
@@ -133,8 +150,8 @@ export function useRoomReservationResources(roomIds, staffIds) {
 
         const timeSlots = await gomeddo
           .buildTimeSlotsRequest(start, end) // Request time slots for the given date range
-          .withField("B25__Staff__c", staffIds) // Filter by staff IDs
-          .withField("B25__Resource__c", roomIds) // Filter by room IDs
+          .withField(FIELD_STAFF_OBJECT, staffIds) // Filter by staff IDs
+          .withField(FIELD_RESOURCE_OBJECT, roomIds) // Filter by room IDs
           .withDuration(30) // Set duration for time slots
           .getResults();
 
@@ -173,13 +190,13 @@ export function useReservationResource(id) {
         const result = await gomeddo
           .buildReservationRequest()
           .includeAdditionalFields([
-            "Dentist_Staff__c",
-            "B25__ResourceName__c",
-            "B25__Start__c",
-            "B25__End__c",
-            "B25__Total_Price__c",
-            "Duration_in_Hours__c",
-            "Dentist_Rating__c"
+            FIELD_RESOURCE_STAFF,
+            FIELD_RESERVATION_RESOURCE_NAME,
+            FIELD_RESERVATION_START_TIME,
+            FIELD_RESERVATION_END_TIME,
+            FIELD_RESERVATION_TOTAL_COST,
+            FIELD_RESERVATION_DURATION,
+            FIELD_RESOURCE_RATING,
           ])
           .withIds(id)
           .getResults();

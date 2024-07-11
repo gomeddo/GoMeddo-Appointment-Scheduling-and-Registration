@@ -5,7 +5,23 @@ import SampleImage from "../../assets/booking.png";
 import Button from "../../components/button";
 import { useStateContext } from "../../sdk/stateContext";
 import { useGomeddo } from "../../sdk/hooks";
-import { Contact, Reservation } from "@gomeddo/sdk";
+import {
+  MESSAGE_LOADING_BOOKING_APPOINTMENT,
+  LABEL_MAKE_APPOINTMENT,
+  LABEL_FIRST_NAME,
+  LABEL_LAST_NAME,
+  LABEL_PHONE,
+  LABEL_EMAIL,
+  LABEL_MESSAGE,
+  LABEL_MESSAGE_PLACEHOLDER,
+  LABEL_AGREEMENT_POLICY,
+  BUTTON_CANCEL,
+  BUTTON_CONFIRM,
+  RESERVATION_RESOURCE_TYPE_ID,
+  FIELD_RESERVATION_RESOURCE_TYPE,
+  FIELD_RESOURCE_OBJECT,
+  FIELD_RESOURCE_DEFAULT_PRICE,
+} from "../../sdk/constants";
 
 const FormControl = forwardRef(
   ({ id, label, type, required, onChange }, ref) => {
@@ -72,19 +88,19 @@ export default function DentistPage() {
 
       // Get message from textarea
       const message = messageRef.current.value;
-      selectedReservation.setCustomProperty("Dentist_Message__c", message);
+      selectedReservation.setCustomProperty(FIELD_RESERVATION_MESSAGE, message);
       selectedReservation.setCustomProperty(
-        "B25__Reservation_Type__c",
-        "a0Ubn0000017cw1EAA"
+        FIELD_RESERVATION_RESOURCE_TYPE,
+        RESERVATION_RESOURCE_TYPE_ID
       );
       selectedReservation.setCustomProperty(
-        "B25__Base_Price__c",
-        selectedDentist.getCustomProperty("B25__Default_Price__c")
+        FIELD_RESERVATION_BASE_PRICE,
+        selectedDentist.getCustomProperty(FIELD_RESOURCE_DEFAULT_PRICE)
       );
 
       // Assuming 'setResource' is a function to set a property
       selectedReservation.setResource({
-        id: selectedReservation.getCustomProperty("B25__Resource__c"),
+        id: selectedReservation.getCustomProperty(FIELD_RESOURCE_OBJECT),
       });
 
       selectedReservation.setContact(contact);
@@ -109,12 +125,12 @@ export default function DentistPage() {
         <div className="flex flex-col items-center justify-center h-full pt-40">
           <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
           <p className="mt-4 text-xl font-semibold text-black">
-            Your appointment is being made...
+            {MESSAGE_LOADING_BOOKING_APPOINTMENT}
           </p>
         </div>
       ) : (
         <div>
-          <h2 className="text-3xl font-semibold">Make an appointment</h2>
+          <h2 className="text-3xl font-semibold">{LABEL_MAKE_APPOINTMENT}</h2>
           <hr className="bg-gray-300 h-0.5 my-8" />
           <div className="flex flex-row gap-16 items-start">
             <div className="relative">
@@ -129,7 +145,7 @@ export default function DentistPage() {
               <FormControl
                 ref={firstNameRef}
                 onChange={handleFormChange}
-                label="First Name"
+                label={LABEL_FIRST_NAME}
                 type="text"
                 id="first_name"
                 required
@@ -137,7 +153,7 @@ export default function DentistPage() {
               <FormControl
                 ref={lastNameRef}
                 onChange={handleFormChange}
-                label="Last Name"
+                label={LABEL_LAST_NAME}
                 type="text"
                 id="last_name"
                 required
@@ -145,7 +161,7 @@ export default function DentistPage() {
               <FormControl
                 ref={phoneRef}
                 onChange={handleFormChange}
-                label="Phone"
+                label={LABEL_PHONE}
                 type="tel"
                 id="phone"
                 required
@@ -153,18 +169,18 @@ export default function DentistPage() {
               <FormControl
                 ref={emailRef}
                 onChange={handleFormChange}
-                label="Email"
+                label={LABEL_EMAIL}
                 type="email"
                 id="email"
                 required
               />
               <div className="col-span-2">
                 <label htmlFor="message" className="block">
-                  Message
+                  {LABEL_MESSAGE}
                 </label>
                 <textarea
                   ref={messageRef}
-                  placeholder="Include a message.."
+                  placeholder={LABEL_MESSAGE_PLACEHOLDER}
                   id="message"
                   className="w-full min-h-24 px-3 py-2 text-gray-700 border rounded focus:outline-none focus:border-blue-500"
                 />
@@ -177,10 +193,10 @@ export default function DentistPage() {
                   className="h-5 w-5 mr-2 text-green-500"
                   onChange={handleFormChange}
                 />
-                <p>You agree with our friendly privacy policy</p>
+                <p>{LABEL_AGREEMENT_POLICY}</p>
               </div>
               <Link to="/">
-                <Button className="w-full">Cancel</Button>
+                <Button className="w-full">{BUTTON_CANCEL}</Button>
               </Link>
               <Button
                 disabled={!formValid}
@@ -188,7 +204,7 @@ export default function DentistPage() {
                 onClick={handleSubmit}
                 className="w-full"
               >
-                Confirm
+                {BUTTON_CONFIRM}
               </Button>
             </div>
           </div>
