@@ -3,8 +3,22 @@ import Button from "../../components/button";
 import { useFilterContext } from "../../sdk/filterContext";
 import { useRef, useState } from "react";
 import clsx from "clsx";
+import {
+  LABEL_SEARCH,
+  LABEL_PRICE,
+  TIME_FRAME_ALL,
+  TIME_FRAME_MORNING,
+  TIME_FRAME_AFTERNOON,
+  TIME_FRAME_EVENING,
+} from "../../sdk/constants";
 
-const timeFrames = ["all", "morning", "afternoon", "evening"];
+const timeFrames = [
+  TIME_FRAME_ALL.toLowerCase(),
+  TIME_FRAME_MORNING.toLowerCase(),
+  TIME_FRAME_AFTERNOON.toLowerCase(),
+  TIME_FRAME_EVENING.toLowerCase(),
+];
+
 const prices = [50, 100, 150, 200];
 
 export default function Filters() {
@@ -38,7 +52,7 @@ export default function Filters() {
           <Search className="size-6" />
           <input
             ref={searchRef}
-            placeholder="Search..."
+            placeholder={LABEL_SEARCH}
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             defaultValue={search}
             onChange={handleSearchChange}
@@ -62,7 +76,7 @@ export default function Filters() {
                 }}
               />
             )}
-            Search...
+            {LABEL_SEARCH}
           </Button>
           <div className="relative">
             <Button
@@ -79,7 +93,7 @@ export default function Filters() {
                   }}
                 />
               )}
-              Price
+              {LABEL_PRICE}
               {price != null && <>{` - $${price} to $${price + 50}`}</>}
             </Button>
             <div
@@ -91,7 +105,7 @@ export default function Filters() {
                 }
               )}
             >
-              <div className="font-medium">Price</div>
+              <div className="font-medium">{LABEL_PRICE}</div>
               {prices.map((p) => (
                 <Button
                   key={p}
@@ -110,7 +124,7 @@ export default function Filters() {
         <div className="ring-1 ring-gray-300 flex flex-row gap-3 p-3 rounded-md items-center text-blue-dark">
           <Calendar className="size-6" />
           <input
-            placeholder="Search..."
+            placeholder={LABEL_SEARCH}
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             type="date"
             value={date.toISOString().slice(0, 10)}

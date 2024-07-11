@@ -1,9 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ArrowRight } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/button";
 import Skeleton from "../../components/skeleton";
 import { useStateContext } from "../../sdk/stateContext";
+import {
+  LABEL_CLINIC_RATING,
+  LABEL_PRICE_PER_APPOINTMENT,
+  MESSAGE_NO_TIME_SLOTS_AVAILABLE,
+  BUTTON_SHOW_MORE,
+  BUTTON_SHOW_LESS,
+  FIELD_RESOURCE_IMG,
+  FIELD_RESOURCE_RATING,
+  FIELD_RESOURCE_DEFAULT_PRICE,
+  FIELD_RESOURCE_LOCATION,
+  FIELD_RESOURCE_CITY,
+} from "../../sdk/constants";
 
 // Function to format date into a readable string
 function formatDate(date) {
@@ -26,11 +38,11 @@ export default function DentistCard({
   // Extract dentist details from the provided resource
   const id = dentistResource.id;
   const name = dentistResource.name;
-  const city = dentistResource.getCustomProperty("Dentist_City__c");
-  const address = dentistResource.getCustomProperty("Dentist_Location__c");
-  const rating = dentistResource.getCustomProperty("Dentist_Rating__c");
-  const price = dentistResource.getCustomProperty("B25__Default_Price__c");
-  const imageUrl = dentistResource.getCustomProperty("B25__Image_Url__c");
+  const city = dentistResource.getCustomProperty(FIELD_RESOURCE_CITY);
+  const address = dentistResource.getCustomProperty(FIELD_RESOURCE_LOCATION);
+  const rating = dentistResource.getCustomProperty(FIELD_RESOURCE_RATING);
+  const price = dentistResource.getCustomProperty(FIELD_RESOURCE_DEFAULT_PRICE);
+  const imageUrl = dentistResource.getCustomProperty(FIELD_RESOURCE_IMG);
 
   // Group reservations by unique time slots
   const timeSlots = reservationResources.reduce((unique, timeSlot) => {
@@ -71,9 +83,14 @@ export default function DentistCard({
           {/* Display dentist name */}
           <div>{address}</div> {/* Display dentist address */}
           <div className="text-sm py-4 flex flex-col gap-2">
-            <span className="font-medium">Price Per Appointment: ${price}</span>
+            <span className="font-medium">
+              {LABEL_PRICE_PER_APPOINTMENT} ${price}
+            </span>
             {/* Display dentist price */}
-            <span>Clinic Rating: {rating}</span>
+            <span>
+              {LABEL_CLINIC_RATING}
+              {rating}
+            </span>
             {/* Display dentist rating */}
           </div>
         </div>
@@ -83,7 +100,7 @@ export default function DentistCard({
           ))}
         {timeSlots.length === 0 && !reservationsLoading && (
           <div className="text-center text-red-500 text-lg font-bold">
-            No available time slots currently
+            {MESSAGE_NO_TIME_SLOTS_AVAILABLE}
           </div>
         )}
         {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
@@ -101,7 +118,7 @@ export default function DentistCard({
             className="!font-bold !ring-0"
             onClick={() => setShowMore((state) => !state)}
           >
-            {showMore ? "show less..." : "show more..."}{" "}
+            {showMore ? BUTTON_SHOW_LESS : BUTTON_SHOW_MORE}
             {/* Toggle show more/less time slots */}
           </Button>
         )}
