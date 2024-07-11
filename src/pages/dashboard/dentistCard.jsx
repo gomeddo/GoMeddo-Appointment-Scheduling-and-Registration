@@ -71,8 +71,15 @@ export default function DentistCard({
           <div className="text-2xl font-medium">{name}</div>{" "}
           {/* Display dentist name */}
           <div>{address}</div> {/* Display dentist address */}
-          <div className="text-sm py-4">
-            {ratingType} <span className="font-medium">{rating}</span>{" "}
+          <div className="text-sm py-4 flex gap-2">
+            <span className="font-bold">${price}</span>
+            {/* Display dentist price */}
+            <span>{ratingType}</span>
+            <span className="font-medium">{rating}</span>
+            {/* Display dentist rating */}
+          </div>
+          <div className="text-sm py-4 flex">
+            <span className="font-bold">${price}</span>
             {/* Display dentist rating */}
           </div>
         </div>

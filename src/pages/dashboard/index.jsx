@@ -16,6 +16,13 @@ const timeFrameRanges = {
   evening: [16, 24],
 };
 
+const priceRanges = {
+  50: [50, 100],
+  100: [100, 150],
+  150: [150, 200],
+  200: [200, 250],
+};
+
 export default function DashboardPage() {
   // Fetch dentist and room resources using custom hooks
   const { isLoading: dentistLoading, dentists, rooms } = useDentistResources();
@@ -31,16 +38,29 @@ export default function DashboardPage() {
     useRoomReservationResources(roomIds, staffIds);
 
   // Get the search term from the filter context
-  const { search, timeFrame } = useFilterContext();
+  const { search, price, timeFrame } = useFilterContext();
 
   // Filter dentists based on the search term
   const filteredDentists = useMemo(() => {
-    if (!search) return dentists;
-    const searchTerm = search.toLowerCase();
-    return dentists.filter((dentist) =>
-      dentist.name.toLowerCase().includes(searchTerm)
-    );
-  }, [search, dentists]);
+    let filteredDentists = dentists;
+
+    if (search != null && !!search.length) {
+      const searchTerm = search.toLowerCase();
+      filteredDentists = filteredDentists.filter((dentist) =>
+        dentist.name.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (price != null) {
+      const priceRange = priceRanges[price];
+      filteredDentists = filteredDentists.filter((dentist) => {
+        const price = dentist.getCustomProperty("B25__Default_Price__c");
+        return price >= priceRange[0] && price <= priceRange[1];
+      });
+    }
+
+    return filteredDentists;
+  }, [search, price, dentists]);
 
   const filteredReservations = useMemo(() => {
     if (!timeFrame) return reservations;
