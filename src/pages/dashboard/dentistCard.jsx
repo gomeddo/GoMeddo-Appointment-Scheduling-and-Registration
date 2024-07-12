@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { ArrowRight } from "react-feather";
-import { useNavigate } from "react-router-dom";
-import Button from "../../components/button";
-import Skeleton from "../../components/skeleton";
-import { useStateContext } from "../../sdk/stateContext";
+import { ArrowRight } from "react-feather"; // Importing ArrowRight icon from react-feather
+import { useNavigate } from "react-router-dom"; // Importing hook for programmatic navigation
+import Button from "../../components/button"; // Importing Button component
+import Skeleton from "../../components/skeleton"; // Importing Skeleton component
 import {
+  BUTTON_SHOW_LESS,
+  BUTTON_SHOW_MORE,
+  FIELD_RESOURCE_CITY,
+  FIELD_RESOURCE_DEFAULT_PRICE,
+  FIELD_RESOURCE_IMG,
+  FIELD_RESOURCE_LOCATION,
+  FIELD_RESOURCE_RATING,
   LABEL_CLINIC_RATING,
   LABEL_PRICE_PER_APPOINTMENT,
   MESSAGE_NO_TIME_SLOTS_AVAILABLE,
-  BUTTON_SHOW_MORE,
-  BUTTON_SHOW_LESS,
-  FIELD_RESOURCE_IMG,
-  FIELD_RESOURCE_RATING,
-  FIELD_RESOURCE_DEFAULT_PRICE,
-  FIELD_RESOURCE_LOCATION,
-  FIELD_RESOURCE_CITY,
-} from "../../sdk/constants";
+} from "../../sdk/constants"; // Importing constants from SDK
+import { useStateContext } from "../../sdk/stateContext"; // Importing custom hook from SDK
 
 // Function to format date into a readable string
 function formatDate(date) {
@@ -35,7 +35,7 @@ export default function DentistCard({
 }) {
   const navigate = useNavigate(); // Hook to programmatically navigate
 
-  // Extract dentist details from the provided resource
+  // Extracting details from the provided dentist resource
   const id = dentistResource.id;
   const name = dentistResource.name;
   const city = dentistResource.getCustomProperty(FIELD_RESOURCE_CITY);
@@ -44,7 +44,7 @@ export default function DentistCard({
   const price = dentistResource.getCustomProperty(FIELD_RESOURCE_DEFAULT_PRICE);
   const imageUrl = dentistResource.getCustomProperty(FIELD_RESOURCE_IMG);
 
-  // Group reservations by unique time slots
+  // Grouping reservations by unique time slots
   const timeSlots = reservationResources.reduce((unique, timeSlot) => {
     const start = timeSlot.startDatetime;
     const end = timeSlot.endDatetime;
@@ -71,38 +71,41 @@ export default function DentistCard({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(); // State to track selected time slot
   const [showMore, setShowMore] = useState(false); // State to toggle showing more/less time slots
 
-  const { setSelectedDentist, setSelectedReservation } = useStateContext(); // Access context to set selected reservation
+  const { setSelectedDentist, setSelectedReservation } = useStateContext(); // Accessing context to set selected reservation
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
       <img src={imageUrl} className="w-full rounded-lg" />{" "}
-      {/* Display dentist image */}
+      {/* Displaying dentist image */}
       <div className="flex flex-col gap-4">
         <div>
           <div className="text-2xl font-medium">{name}</div>{" "}
-          {/* Display dentist name */}
-          <div>{address}</div> {/* Display dentist address */}
+          {/* Displaying dentist name */}
+          <div>{address}</div> {/* Displaying dentist address */}
           <div className="text-sm py-4 flex flex-col gap-2">
             <span className="font-medium">
               {LABEL_PRICE_PER_APPOINTMENT} ${price}
             </span>
-            {/* Display dentist price */}
+            {/* Displaying dentist price */}
             <span>
               {LABEL_CLINIC_RATING}
               {rating}
             </span>
-            {/* Display dentist rating */}
+            {/* Displaying dentist rating */}
           </div>
         </div>
+        {/* Displaying loading skeletons while reservations are loading */}
         {reservationsLoading &&
           Array.from(Array(3).keys()).map((i) => (
-            <Skeleton key={i} className="h-10" /> // Display loading skeletons while reservations are loading
+            <Skeleton key={i} className="h-10" />
           ))}
+        {/* Displaying message when no time slots are available */}
         {timeSlots.length === 0 && !reservationsLoading && (
           <div className="text-center text-red-500 text-lg font-bold">
             {MESSAGE_NO_TIME_SLOTS_AVAILABLE}
           </div>
         )}
+        {/* Mapping and displaying time slots */}
         {timeSlots.slice(0, !showMore ? 3 : undefined).map((timeSlot, i) => (
           <Button
             key={i}
@@ -110,9 +113,10 @@ export default function DentistCard({
             onClick={() => setSelectedTimeSlot(i)}
           >
             {formatDate(timeSlot.start)} - {formatDate(timeSlot.end)}{" "}
-            {/* Display time slots */}
+            {/* Displaying time slot */}
           </Button>
         ))}
+        {/* Button to toggle showing more/less time slots */}
         {timeSlots.length > 3 && (
           <Button
             className="!font-bold !ring-0"
@@ -122,6 +126,7 @@ export default function DentistCard({
             {/* Toggle show more/less time slots */}
           </Button>
         )}
+        {/* Arrow icon to navigate to dentist details page */}
         {selectedTimeSlot != null && (
           <ArrowRight
             className="ms-auto hover:scale-105 transition-all size-10 cursor-pointer"
@@ -129,8 +134,8 @@ export default function DentistCard({
               setSelectedDentist(dentistResource);
               setSelectedReservation(
                 timeSlots[selectedTimeSlot].reservations[0]
-              ); // Set selected reservation in context
-              navigate("/dentist"); // Navigate to dentist details page
+              ); // Setting selected reservation in context
+              navigate("/dentist"); // Navigating to dentist details page
             }}
           />
         )}

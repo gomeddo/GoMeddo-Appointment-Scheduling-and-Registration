@@ -1,17 +1,18 @@
-import { Calendar, Search, X } from "react-feather";
-import Button from "../../components/button";
-import { useFilterContext } from "../../sdk/filterContext";
-import { useRef, useState } from "react";
-import clsx from "clsx";
+import clsx from "clsx"; // Importing clsx library for conditional class names
+import { useRef, useState } from "react"; // Importing useRef and useState hooks from React
+import { Calendar, Search, X } from "react-feather"; // Importing icons from react-feather
+import Button from "../../components/button"; // Importing Button component
 import {
-  LABEL_SEARCH,
   LABEL_PRICE,
-  TIME_FRAME_ALL,
-  TIME_FRAME_MORNING,
+  LABEL_SEARCH,
   TIME_FRAME_AFTERNOON,
+  TIME_FRAME_ALL,
   TIME_FRAME_EVENING,
-} from "../../sdk/constants";
+  TIME_FRAME_MORNING,
+} from "../../sdk/constants"; // Importing constants from SDK
+import { useFilterContext } from "../../sdk/filterContext"; // Importing custom hook from filter context
 
+// Constants for time frames and prices
 const timeFrames = [
   TIME_FRAME_ALL.toLowerCase(),
   TIME_FRAME_MORNING.toLowerCase(),
@@ -19,7 +20,7 @@ const timeFrames = [
   TIME_FRAME_EVENING.toLowerCase(),
 ];
 
-const prices = [50, 100, 150, 200];
+const prices = [50, 100, 150, 200]; // Array of price ranges
 
 export default function Filters() {
   const {
@@ -31,15 +32,17 @@ export default function Filters() {
     setTimeFrame,
     price,
     setPrice,
-  } = useFilterContext();
+  } = useFilterContext(); // Using custom filter context to manage state
 
-  const [showPrice, setShowPrice] = useState(false);
-  const searchRef = useRef();
+  const [showPrice, setShowPrice] = useState(false); // State to toggle display of price filter dropdown
+  const searchRef = useRef(); // Ref for search input field
 
+  // Handler for handling search input change
   const handleSearchChange = () => {
-    setSearch(searchRef.current.value);
+    setSearch(searchRef.current.value); // Update search context with input value
   };
 
+  // Handler for clearing search input
   const handleClearSearch = () => {
     setSearch(""); // Clear the search context
     searchRef.current.value = ""; // Clear the input field
@@ -47,9 +50,11 @@ export default function Filters() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 xl:gap-6">
+      {/* Left column for search and price filters */}
       <div className="flex flex-col gap-4">
+        {/* Search filter */}
         <div className="ring-1 ring-gray-300 flex flex-row gap-3 p-3 rounded-md items-center text-blue-dark">
-          <Search className="size-6" />
+          <Search className="size-6" /> {/* Search icon */}
           <input
             ref={searchRef}
             placeholder={LABEL_SEARCH}
@@ -61,7 +66,9 @@ export default function Filters() {
             <X className="cursor-pointer" onClick={handleClearSearch} />
           )}
         </div>
+        {/* Price filter */}
         <div className="flex flex-row gap-4">
+          {/* Button to apply search filter */}
           <Button
             active={!!search && !!search.length}
             onClick={handleSearchChange}
@@ -78,6 +85,7 @@ export default function Filters() {
             )}
             {LABEL_SEARCH}
           </Button>
+          {/* Dropdown for price filter */}
           <div className="relative">
             <Button
               active={price != null}
@@ -96,6 +104,7 @@ export default function Filters() {
               {LABEL_PRICE}
               {price != null && <>{` - $${price} to $${price + 50}`}</>}
             </Button>
+            {/* Dropdown menu for price filter */}
             <div
               className={clsx(
                 "border border-gray-300 rounded-md mt-3 bg-white absolute p-4 drop-shadow-2xl flex-col gap-4",
@@ -106,6 +115,7 @@ export default function Filters() {
               )}
             >
               <div className="font-medium">{LABEL_PRICE}</div>
+              {/* Buttons for each price range */}
               {prices.map((p) => (
                 <Button
                   key={p}
@@ -120,18 +130,22 @@ export default function Filters() {
           </div>
         </div>
       </div>
+      {/* Right column for date and time frame filters */}
       <div className="flex flex-col gap-4">
+        {/* Date filter */}
         <div className="ring-1 ring-gray-300 flex flex-row gap-3 p-3 rounded-md items-center text-blue-dark">
-          <Calendar className="size-6" />
+          <Calendar className="size-6" /> {/* Calendar icon */}
           <input
             placeholder={LABEL_SEARCH}
             className="placeholder:text-blue-dark placeholder:font-medium h-full w-full !outline-none"
             type="date"
-            value={date.toISOString().slice(0, 10)}
-            onChange={(e) => setDate(e.target.value)}
+            value={date.toISOString().slice(0, 10)} // Format date value
+            onChange={(e) => setDate(e.target.value)} // Update date context with input value
           />
         </div>
+        {/* Time frame filter */}
         <div className="flex flex-row gap-4">
+          {/* Buttons for each time frame */}
           {timeFrames.map((t) => (
             <Button
               key={t}

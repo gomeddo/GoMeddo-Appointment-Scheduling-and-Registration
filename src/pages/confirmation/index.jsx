@@ -1,7 +1,8 @@
 import React from "react";
-import { CheckCircle } from "react-feather";
-import { useNavigate, useParams } from "react-router-dom";
-import SampleImage from "../../assets/booking.png";
+import { CheckCircle } from "react-feather"; // Importing CheckCircle icon from react-feather
+import { useNavigate, useParams } from "react-router-dom"; // Importing hooks from react-router-dom
+import SampleImage from "../../assets/booking.png"; // Importing sample image
+import Skeleton from "../../components/skeleton"; // Importing Skeleton component
 import {
   BUTTON_BACK_TO_DASHBOARD,
   FIELD_RESERVATION_DURATION,
@@ -21,27 +22,33 @@ import {
   MESSAGE_CANCELLATION_POLICY,
   MESSAGE_CONFIRMED,
   MESSAGE_LOADING_BOOKING_APPOINTMENT,
-} from "../../sdk/constants";
-import { useDentistResources, useReservationResource } from "../../sdk/hooks";
-import Skeleton from "../../components/skeleton";
+} from "../../sdk/constants"; // Importing constants from SDK
+import { useDentistResources, useReservationResource } from "../../sdk/hooks"; // Importing custom hooks from SDK
 
 export default function ConfirmationPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // Fetching route parameters
 
+  // Fetching reservation details using custom hook
   const { isLoading: reservationLoading, reservation } =
     useReservationResource(id);
+
+  // Fetching dentist and room details using custom hook
   const { isLoading: dentistsLoading, dentists, rooms } = useDentistResources();
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Handler function for navigating back to dashboard
   const handleBackToDashboard = () => {
     navigate("/");
   };
 
+  // Loading state while reservation details are being fetched
   if (reservationLoading || !reservation) {
     return (
       <div className="flex flex-col items-center justify-center h-full pt-40">
+        {/* Loading spinner */}
         <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
+        {/* Loading message */}
         <p className="mt-4 text-xl font-semibold text-black">
           {MESSAGE_LOADING_BOOKING_APPOINTMENT}
         </p>
@@ -49,6 +56,7 @@ export default function ConfirmationPage() {
     );
   }
 
+  // Extracting details from the reservation object
   const roomId = reservation.getCustomProperty(FIELD_RESOURCE_OBJECT);
   const dentistId = rooms?.find((room) => room.id === roomId)?.parentId;
   const dentist = dentists?.find((dentist) => dentist.id === dentistId);
@@ -70,6 +78,7 @@ export default function ConfirmationPage() {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Confirmation message */}
       <div className="flex gap-2 items-center">
         <div className="items-center rounded-full bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
           <CheckCircle className="size-3 inline-block me-1" />
@@ -80,7 +89,9 @@ export default function ConfirmationPage() {
         </div>
       </div>
       <hr className="bg-gray-300 h-0.5" />
+      {/* Appointment details section */}
       <div className="flex flex-row gap-16">
+        {/* Left section with image and cancellation policy */}
         <div className="flex flex-col gap-16">
           <div className="relative">
             <div className="bg-black rounded-3xl w-[14rem] h-[22rem] me-8 mb-8" />
@@ -95,12 +106,15 @@ export default function ConfirmationPage() {
             {MESSAGE_CANCELLATION_POLICY}
           </div>
         </div>
+        {/* Right section with appointment details */}
         <div className="flex flex-col gap-8 flex-1">
           <div>
             <div className="font-bold text-2xl">{roomName}</div>
+            {/* Displaying skeleton loader for address when loading */}
             {(dentistsLoading || !dentistAddress) && (
               <Skeleton className="h-8" />
             )}
+            {/* Displaying dentist address when available */}
             {!!dentistAddress && (
               <div className="font-medium">{dentistAddress}</div>
             )}
@@ -108,6 +122,7 @@ export default function ConfirmationPage() {
               {LABEL_CLINIC_RATING} {rating}
             </div>
           </div>
+          {/* Appointment details box */}
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
             <div className="flex justify-between font-medium text-2xl py-4">
               <div>
@@ -123,6 +138,7 @@ export default function ConfirmationPage() {
               </div>
             </div>
           </div>
+          {/* Back to dashboard button */}
           <div className="flex justify-end">
             <button
               onClick={handleBackToDashboard}

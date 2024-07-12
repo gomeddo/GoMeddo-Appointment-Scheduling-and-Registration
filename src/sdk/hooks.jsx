@@ -1,23 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
 import GoMeddo from "@gomeddo/sdk";
-import { useFilterContext } from "./filterContext";
+import { useEffect, useMemo, useState } from "react";
 import {
-  GOMEDDO_KEY,
-  RESOURCE_COUNTRY_ID,
-  FIELD_RESOURCE_STAFF,
-  FIELD_RESOURCE_LOCATION,
+  FIELD_RESERVATION_DURATION,
+  FIELD_RESERVATION_END_TIME,
+  FIELD_RESERVATION_RESOURCE_NAME,
+  FIELD_RESERVATION_START_TIME,
+  FIELD_RESERVATION_TOTAL_COST,
   FIELD_RESOURCE_CITY,
   FIELD_RESOURCE_DEFAULT_PRICE,
   FIELD_RESOURCE_IMG,
-  FIELD_RESOURCE_RATING,
-  FIELD_STAFF_OBJECT,
-  FIELD_RESERVATION_RESOURCE_NAME,
-  FIELD_RESERVATION_START_TIME,
-  FIELD_RESERVATION_END_TIME,
-  FIELD_RESERVATION_TOTAL_COST,
-  FIELD_RESERVATION_DURATION,
+  FIELD_RESOURCE_LOCATION,
   FIELD_RESOURCE_OBJECT,
+  FIELD_RESOURCE_RATING,
+  FIELD_RESOURCE_STAFF,
+  FIELD_STAFF_OBJECT,
+  GOMEDDO_KEY,
+  RESOURCE_COUNTRY_ID,
 } from "./constants";
+import { useFilterContext } from "./filterContext";
 
 // Custom hook to initialize and memoize the GoMeddo instance
 export function useGomeddo() {

@@ -1,18 +1,19 @@
-import DentistCard from "./dentistCard";
+import { useMemo } from "react"; // Import useMemo hook from React
+import Skeleton from "../../components/skeleton"; // Import Skeleton component
+import {
+  FIELD_RESOURCE_DEFAULT_PRICE,
+  MESSAGE_NO_CLINIC_MATCH_SEARCH,
+} from "../../sdk/constants"; // Import constants from SDK
+import { useFilterContext } from "../../sdk/filterContext"; // Import the filter context
 import {
   useDentistResources,
   useRoomReservationResources,
   useStaffResources,
-} from "../../sdk/hooks";
-import Filters from "./filters";
-import Skeleton from "../../components/skeleton";
-import { useMemo } from "react";
-import { useFilterContext } from "../../sdk/filterContext"; // Import the filter context
-import {
-  FIELD_RESOURCE_DEFAULT_PRICE,
-  MESSAGE_NO_CLINIC_MATCH_SEARCH,
-} from "../../sdk/constants";
+} from "../../sdk/hooks"; // Import custom hooks for fetching resources
+import DentistCard from "./dentistCard"; // Import DentistCard component
+import Filters from "./filters"; // Import Filters component
 
+// Define time frame ranges and corresponding labels
 const timeFrameRanges = {
   all: [6, 24],
   morning: [6, 12],
@@ -20,6 +21,7 @@ const timeFrameRanges = {
   evening: [16, 24],
 };
 
+// Define price ranges and corresponding labels
 const priceRanges = {
   50: [50, 100],
   100: [100, 150],
@@ -44,10 +46,11 @@ export default function DashboardPage() {
   // Get the search term from the filter context
   const { search, price, timeFrame } = useFilterContext();
 
-  // Filter dentists based on the search term
+  // Filter dentists based on the search term, price, and time frame
   const filteredDentists = useMemo(() => {
     let filteredDentists = dentists;
 
+    // Filter by search term
     if (search != null && !!search.length) {
       const searchTerm = search.toLowerCase();
       filteredDentists = filteredDentists.filter((dentist) =>
@@ -55,6 +58,7 @@ export default function DashboardPage() {
       );
     }
 
+    // Filter by price range
     if (price != null) {
       const priceRange = priceRanges[price];
       filteredDentists = filteredDentists.filter((dentist) => {
@@ -66,8 +70,9 @@ export default function DashboardPage() {
     return filteredDentists;
   }, [search, price, dentists]);
 
+  // Filter reservations based on selected time frame
   const filteredReservations = useMemo(() => {
-    if (!timeFrame) return reservations;
+    if (!timeFrame) return reservations; // Return all reservations if no time frame is selected
     const range = timeFrameRanges[timeFrame];
     return reservations.filter((reservation) => {
       const start = new Date(reservation.startDatetime);
@@ -97,6 +102,7 @@ export default function DashboardPage() {
             (room) => room.parentId === dentist.id
           );
           const roomIds = dentistRooms.map((room) => room.id);
+
           // Filter reservations for the current dentist's rooms
           const roomReservations = filteredReservations.filter((reservation) =>
             roomIds.includes(reservation.getCustomProperty("B25__Resource__c"))
