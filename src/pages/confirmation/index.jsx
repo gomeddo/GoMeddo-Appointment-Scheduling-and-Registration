@@ -1,37 +1,44 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { CheckCircle } from "react-feather";
+import { useNavigate, useParams } from "react-router-dom";
 import SampleImage from "../../assets/booking.png";
-import { useReservationResource } from "../../sdk/hooks";
 import {
-  MESSAGE_LOADING,
-  MESSAGE_CONFIRMED,
+  BUTTON_BACK_TO_DASHBOARD,
+  FIELD_RESERVATION_DURATION,
+  FIELD_RESERVATION_END_TIME,
+  FIELD_RESERVATION_RESOURCE_NAME,
+  FIELD_RESERVATION_START_TIME,
+  FIELD_RESERVATION_TOTAL_COST,
+  FIELD_RESOURCE_LOCATION,
+  FIELD_RESOURCE_OBJECT,
+  FIELD_RESOURCE_RATING,
+  FIELD_RESOURCE_STAFF,
   LABEL_CANCELLATION_POLICY,
-  MESSAGE_CANCELLATION_POLICY,
   LABEL_CLINIC_RATING,
   LABEL_DENTIST_APPOINTMENT_WITH,
   LABEL_TOTAL,
   LABEL_USD,
-  BUTTON_BACK_TO_DASHBOARD,
-  FIELD_RESOURCE_STAFF,
-  FIELD_RESERVATION_RESOURCE_NAME,
-  FIELD_RESERVATION_START_TIME,
-  FIELD_RESERVATION_END_TIME,
-  FIELD_RESERVATION_TOTAL_COST,
-  FIELD_RESERVATION_DURATION,
-  FIELD_RESOURCE_RATING,
+  MESSAGE_CANCELLATION_POLICY,
+  MESSAGE_CONFIRMED,
+  MESSAGE_LOADING,
 } from "../../sdk/constants";
+import { useDentistResources, useReservationResource } from "../../sdk/hooks";
+import Skeleton from "../../components/skeleton";
 
 export default function ConfirmationPage() {
   const { id } = useParams();
-  const { isLoading, reservation } = useReservationResource(id);
+
+  const { isLoading: reservationLoading, reservation } =
+    useReservationResource(id);
+  const { isLoading: dentistsLoading, dentists, rooms } = useDentistResources();
+
   const navigate = useNavigate();
 
   const handleBackToDashboard = () => {
     navigate("/");
   };
 
-  if (isLoading || !reservation) {
+  if (reservationLoading || !reservation) {
     return (
       <div className="flex flex-col items-center justify-center h-full pt-40">
         <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
@@ -41,6 +48,11 @@ export default function ConfirmationPage() {
       </div>
     );
   }
+
+  const roomId = reservation.getCustomProperty(FIELD_RESOURCE_OBJECT);
+  const dentistId = rooms?.find((room) => room.id === roomId)?.parentId;
+  const dentist = dentists?.find((dentist) => dentist.id === dentistId);
+  const dentistAddress = dentist?.getCustomProperty(FIELD_RESOURCE_LOCATION);
 
   const staff = reservation.getCustomProperty(FIELD_RESOURCE_STAFF);
   const roomName = reservation.getCustomProperty(
@@ -86,9 +98,12 @@ export default function ConfirmationPage() {
         <div className="flex flex-col gap-8 flex-1">
           <div>
             <div className="font-bold text-2xl">{roomName}</div>
-            <div className="font-medium">
-              5678 West Sunset Boulevard, Los Angeles, CA 90028
-            </div>
+            {(dentistsLoading || !dentistAddress) && (
+              <Skeleton className="h-8" />
+            )}
+            {!!dentistAddress && (
+              <div className="font-medium">{dentistAddress}</div>
+            )}
             <div className="font-medium">
               {LABEL_CLINIC_RATING} {rating}
             </div>

@@ -190,6 +190,7 @@ export function useReservationResource(id) {
         const result = await gomeddo
           .buildReservationRequest()
           .includeAdditionalFields([
+            FIELD_RESOURCE_OBJECT,
             FIELD_RESOURCE_STAFF,
             FIELD_RESERVATION_RESOURCE_NAME,
             FIELD_RESERVATION_START_TIME,
