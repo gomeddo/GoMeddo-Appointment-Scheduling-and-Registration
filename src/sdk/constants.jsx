@@ -28,7 +28,6 @@ export const NAV_SERVICES = "Services";
 export const NAV_CONTACT = "Contact";
 export const NAV_ABOUT = "About";
 
-export const MESSAGE_LOADING = "Loading...";
 export const MESSAGE_APPOINTMENT_MADE_FOR = "Appointment Made For: ";
 export const MESSAGE_CONFIRMED = "Confirmed";
 export const MESSAGE_NO_CLINIC_MATCH_SEARCH = "No Clinics match your search...";

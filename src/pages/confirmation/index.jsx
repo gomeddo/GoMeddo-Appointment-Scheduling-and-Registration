@@ -20,7 +20,7 @@ import {
   LABEL_USD,
   MESSAGE_CANCELLATION_POLICY,
   MESSAGE_CONFIRMED,
-  MESSAGE_LOADING,
+  MESSAGE_LOADING_BOOKING_APPOINTMENT,
 } from "../../sdk/constants";
 import { useDentistResources, useReservationResource } from "../../sdk/hooks";
 import Skeleton from "../../components/skeleton";
@@ -43,7 +43,7 @@ export default function ConfirmationPage() {
       <div className="flex flex-col items-center justify-center h-full pt-40">
         <div className="w-24 h-24 border-8 border-black border-dashed rounded-full animate-spin"></div>
         <p className="mt-4 text-xl font-semibold text-black">
-          {MESSAGE_LOADING}
+          {MESSAGE_LOADING_BOOKING_APPOINTMENT}
         </p>
       </div>
     );
