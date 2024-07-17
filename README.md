@@ -1,12 +1,12 @@
-<h1 align="center">Book a Room for Student Housing</h1>
+<h1 align="center">Dentist Appointment Booking</h1>
 
 <p align="center">
-  <img src="./src/assets/dashboard.png" alt="Student Housing Dashboard" width="650" height="367">
+  <img src="./src/assets/dashboard.png" alt="Dentist Appointment Booking" width="650" height="367">
 </p>
 
 # Get started with the GoMeddo JS SDK
 
-This project uses the [GoMeddo JS SDK](https://github.com/gomeddo/js-sdk) to implement an application that lets a user book a room in a student housing via [GoMeddo](https://gomeddo.com).
+This project uses the [GoMeddo JS SDK](https://github.com/gomeddo/js-sdk) to implement an application that lets a user book a dentist appointment in a clinic with a staff member [GoMeddo](https://gomeddo.com).
 
 <!--  WE HAVE TO WAIT TILL THE REPO IS PUBLIC
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?s=https%3A%2F%2Fgithub.com%2Fgomeddo%2FRoom-and-Facilities-bookings&showOptionalTeamCreation=false) -->
