@@ -67,6 +67,7 @@ Note:
 To access to the SDK’s functionalities, an API key from _GoMeddo_ is required. For instructions on obtaining this key refer to [First time Set-up](https://gomeddo.atlassian.net/wiki/spaces/WID/pages/3353837569/First+time+Set-up). Remember to **whitelist** your domain as a part of the setup process and grant **privileged** access to the API key.
 
 5. **Create .env file**
+
 Make sure that an .env file exists in your development environment. This file should have the following content
 
 ```

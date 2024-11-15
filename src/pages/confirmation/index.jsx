@@ -120,7 +120,7 @@ export default function ConfirmationPage() {
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
             <div className="flex justify-between font-medium text-2xl py-4">
               <div>
-                {LABEL_DENTIST_APPOINTMENT_WITH}
+                {LABEL_DENTIST_APPOINTMENT_WITH} {staff}
               </div>
               <div className="font-normal">{duration}h</div>
             </div>
