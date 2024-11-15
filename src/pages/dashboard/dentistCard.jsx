@@ -3,15 +3,13 @@ import { ArrowRight } from "react-feather"; // Importing ArrowRight icon from re
 import { useNavigate } from "react-router-dom"; // Importing hook for programmatic navigation
 import Button from "../../components/button"; // Importing Button component
 import Skeleton from "../../components/skeleton"; // Importing Skeleton component
+import SampleImage from "../../assets/Sample_Room1.jpeg"; // Import sample image
 import {
   BUTTON_SHOW_LESS,
   BUTTON_SHOW_MORE,
   FIELD_RESOURCE_CITY,
   FIELD_RESOURCE_DEFAULT_PRICE,
   FIELD_RESOURCE_IMG,
-  FIELD_RESOURCE_LOCATION,
-  FIELD_RESOURCE_RATING,
-  LABEL_CLINIC_RATING,
   LABEL_PRICE_PER_APPOINTMENT,
   MESSAGE_NO_TIME_SLOTS_AVAILABLE,
 } from "../../sdk/constants"; // Importing constants from SDK
@@ -36,11 +34,8 @@ export default function DentistCard({
   const navigate = useNavigate(); // Hook to programmatically navigate
 
   // Extracting details from the provided dentist resource
-  const id = dentistResource.id;
   const name = dentistResource.name;
   const city = dentistResource.getCustomProperty(FIELD_RESOURCE_CITY);
-  const address = dentistResource.getCustomProperty(FIELD_RESOURCE_LOCATION);
-  const rating = dentistResource.getCustomProperty(FIELD_RESOURCE_RATING);
   const price = dentistResource.getCustomProperty(FIELD_RESOURCE_DEFAULT_PRICE);
   const imageUrl = dentistResource.getCustomProperty(FIELD_RESOURCE_IMG);
 
@@ -75,23 +70,22 @@ export default function DentistCard({
 
   return (
     <div className="rounded-lg ring-1 ring-gray-300 p-8 text-blue-dark grid md:grid-cols-2 gap-8">
-      <img src={imageUrl} className="w-full rounded-lg" />{" "}
+      {(!imageUrl ) && (
+        <img src={SampleImage} className="rounded-lg" />
+      )}
+      {(imageUrl) && (
+        <img src={imageUrl} className="w-full rounded-lg" />
+      )}{" "}
       {/* Displaying dentist image */}
       <div className="flex flex-col gap-4">
         <div>
-          <div className="text-2xl font-medium">{name}</div>{" "}
+          <div className="text-2xl font-medium">{name} - {city}</div>{" "}
           {/* Displaying dentist name */}
-          <div>{address}</div> {/* Displaying dentist address */}
           <div className="text-sm py-4 flex flex-col gap-2">
             <span className="font-medium">
               {LABEL_PRICE_PER_APPOINTMENT} ${price}
             </span>
             {/* Displaying dentist price */}
-            <span>
-              {LABEL_CLINIC_RATING}
-              {rating}
-            </span>
-            {/* Displaying dentist rating */}
           </div>
         </div>
         {/* Displaying loading skeletons while reservations are loading */}

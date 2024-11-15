@@ -53,17 +53,9 @@ Upon selecting a desired time slot, users are directed to the booking form. Here
 
 4. **Create Custom Fields Under the Objects**:
 
-   - Add the following custom fields to the Resource object “Clinic” to provide detailed information about each Dental Clinic:
+   - Add the following custom fields to the Reservation object to provide detailed information about Re
+   - `Staff_Name__c` (Formula Text Field with value `B25__Staff__r.Name`)
 
-     - `Dentist_City__c` (Formula Text Field)
-     - `Dentist_Location__c` (Long Text Area Field)
-     - `Dentist_Rating__c` (Number Field)
-     - `B25__Image_Url__c` (URL Field)
-     - `B25__Default_Price__c` (Currency Field)
-
-   - Add the following custom field to the Reservation object to provide a message for the dentist when making an appointment:
-
-     - `Dentist_Message__c` (Long Text Area Field)
 
 Note:
 
@@ -73,6 +65,23 @@ Note:
 ## API Key Requirement
 
 To access to the SDK’s functionalities, an API key from _GoMeddo_ is required. For instructions on obtaining this key refer to [First time Set-up](https://gomeddo.atlassian.net/wiki/spaces/WID/pages/3353837569/First+time+Set-up). Remember to **whitelist** your domain as a part of the setup process and grant **privileged** access to the API key.
+
+5. **Create .env file**
+Make sure that an .env file exists in your development environment. This file should have the following content
+
+```
+VITE_GOMEDDO_KEY=<API_KEY> 
+VITE_RESOURCE_COUNTRY_ID=<RESOURCE_COUNTRY_ID>
+VITE_RESERVATION_RESOURCE_TYPE_ID=<RESERVATION_TYPE_ID>
+```
+
+For example:
+
+```
+VITE_GOMEDDO_KEY='96b70bdb-thisisafakekey-b93a-f8c609919cc9'
+VITE_RESOURCE_COUNTRY_ID="a0ZKj00000GS8FxMAL"
+VITE_RESERVATION_RESOURCE_TYPE_ID="a0UKj00000NXSMfMAP"
+```
 
 ### UI Setup
 

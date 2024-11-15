@@ -205,7 +205,7 @@ export default function DentistPage() {
                   className="h-5 w-5 mr-2 text-green-500"
                   onChange={handleFormChange}
                 />
-                <p>{LABEL_AGREEMENT_POLICY}</p>
+                <label htmlFor="agreement">{LABEL_AGREEMENT_POLICY}</label>
               </div>
               {/* Cancel and Confirm buttons */}
               <Link to="/">

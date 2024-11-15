@@ -1,21 +1,17 @@
-import React from "react";
 import { CheckCircle } from "react-feather"; // Importing CheckCircle icon from react-feather
 import { useNavigate, useParams } from "react-router-dom"; // Importing hooks from react-router-dom
 import SampleImage from "../../assets/booking.png"; // Importing sample image
 import Skeleton from "../../components/skeleton"; // Importing Skeleton component
 import {
-  BUTTON_BACK_TO_DASHBOARD,
+  BUTTON_BACK_TO_HOMEPAGE,
   FIELD_RESERVATION_DURATION,
   FIELD_RESERVATION_END_TIME,
   FIELD_RESERVATION_RESOURCE_NAME,
   FIELD_RESERVATION_START_TIME,
   FIELD_RESERVATION_TOTAL_COST,
-  FIELD_RESOURCE_LOCATION,
   FIELD_RESOURCE_OBJECT,
-  FIELD_RESOURCE_RATING,
   FIELD_RESOURCE_STAFF,
   LABEL_CANCELLATION_POLICY,
-  LABEL_CLINIC_RATING,
   LABEL_DENTIST_APPOINTMENT_WITH,
   LABEL_TOTAL,
   LABEL_USD,
@@ -60,7 +56,6 @@ export default function ConfirmationPage() {
   const roomId = reservation.getCustomProperty(FIELD_RESOURCE_OBJECT);
   const dentistId = rooms?.find((room) => room.id === roomId)?.parentId;
   const dentist = dentists?.find((dentist) => dentist.id === dentistId);
-  const dentistAddress = dentist?.getCustomProperty(FIELD_RESOURCE_LOCATION);
 
   const staff = reservation.getCustomProperty(FIELD_RESOURCE_STAFF);
   const roomName = reservation.getCustomProperty(
@@ -74,7 +69,16 @@ export default function ConfirmationPage() {
   );
   const cost = reservation.getCustomProperty(FIELD_RESERVATION_TOTAL_COST);
   const duration = reservation.getCustomProperty(FIELD_RESERVATION_DURATION);
-  const rating = reservation.getCustomProperty(FIELD_RESOURCE_RATING);
+
+  const options1 = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  const dateTimeFormat = new Intl.DateTimeFormat('en',options1);
+  const dateTimeRange = dateTimeFormat.formatRange(start, end);
 
   return (
     <div className="flex flex-col gap-8">
@@ -85,7 +89,7 @@ export default function ConfirmationPage() {
           {MESSAGE_CONFIRMED}
         </div>
         <div className="font-bold">
-          Appointment Made For: {start.toLocaleString()}
+          Appointment Made For: {dateTimeRange}
         </div>
       </div>
       <hr className="bg-gray-300 h-0.5" />
@@ -110,23 +114,13 @@ export default function ConfirmationPage() {
         <div className="flex flex-col gap-8 flex-1">
           <div>
             <div className="font-bold text-2xl">{roomName}</div>
-            {/* Displaying skeleton loader for address when loading */}
-            {(dentistsLoading || !dentistAddress) && (
-              <Skeleton className="h-8" />
-            )}
-            {/* Displaying dentist address when available */}
-            {!!dentistAddress && (
-              <div className="font-medium">{dentistAddress}</div>
-            )}
-            <div className="font-medium">
-              {LABEL_CLINIC_RATING} {rating}
-            </div>
+            
           </div>
           {/* Appointment details box */}
           <div className="rounded-lg border border-gray-300 p-5 text-blue-dark max-w-3xl">
             <div className="flex justify-between font-medium text-2xl py-4">
               <div>
-                {LABEL_DENTIST_APPOINTMENT_WITH} {staff}
+                {LABEL_DENTIST_APPOINTMENT_WITH}
               </div>
               <div className="font-normal">{duration}h</div>
             </div>
@@ -144,7 +138,7 @@ export default function ConfirmationPage() {
               onClick={handleBackToDashboard}
               className="bg-blue-dark hover:bg-blue-hover text-white font-bold py-2 px-4 rounded"
             >
-              {BUTTON_BACK_TO_DASHBOARD}
+              {BUTTON_BACK_TO_HOMEPAGE}
             </button>
           </div>
         </div>

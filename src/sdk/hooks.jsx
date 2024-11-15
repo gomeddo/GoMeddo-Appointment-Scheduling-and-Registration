@@ -9,9 +9,7 @@ import {
   FIELD_RESOURCE_CITY,
   FIELD_RESOURCE_DEFAULT_PRICE,
   FIELD_RESOURCE_IMG,
-  FIELD_RESOURCE_LOCATION,
   FIELD_RESOURCE_OBJECT,
-  FIELD_RESOURCE_RATING,
   FIELD_RESOURCE_STAFF,
   FIELD_STAFF_OBJECT,
   GOMEDDO_KEY,
@@ -45,8 +43,6 @@ export function useDentistResources() {
           .includeAllResourcesAt(RESOURCE_COUNTRY_ID) // Include resources at a specific location
           .includeAdditionalField([
             FIELD_RESOURCE_CITY,
-            FIELD_RESOURCE_LOCATION,
-            FIELD_RESOURCE_RATING,
             FIELD_RESOURCE_IMG,
             FIELD_RESOURCE_DEFAULT_PRICE,
           ])
@@ -197,7 +193,6 @@ export function useReservationResource(id) {
             FIELD_RESERVATION_END_TIME,
             FIELD_RESERVATION_TOTAL_COST,
             FIELD_RESERVATION_DURATION,
-            FIELD_RESOURCE_RATING,
           ])
           .withIds(id)
           .getResults();
