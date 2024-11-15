@@ -53,7 +53,7 @@ Upon selecting a desired time slot, users are directed to the booking form. Here
 
 4. **Create Custom Fields Under the Objects**:
 
-   - Add the following custom fields to the Reservation object to provide detailed information about Re
+   Add the following custom fields to the Reservation object to provide details
    - `Staff_Name__c` (Formula Text Field with value `B25__Staff__r.Name`)
 
 
